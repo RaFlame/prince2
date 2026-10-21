@@ -2,3 +2,6 @@ packages:
   - .
 allowBuilds:
   sharp: true
+minimumReleaseAgeExclude:
+  - caniuse-lite
+  - electron-to-chromium
