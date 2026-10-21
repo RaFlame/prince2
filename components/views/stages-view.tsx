@@ -1,6 +1,7 @@
 import type { Locale } from "@/lib/i18n"
 import { t } from "@/lib/i18n"
 import { pick, stages } from "@/lib/project-data"
+import { EditableCard } from "@/components/editable-card"
 
 export function StagesView({ locale }: { locale: Locale }) {
   return (
@@ -42,25 +43,24 @@ export function StagesView({ locale }: { locale: Locale }) {
                 </span>
               </div>
             </div>
-            <div className="grid gap-4 px-5 py-4 lg:grid-cols-2">
-              <div>
-                <h3 className="text-xs font-semibold uppercase tracking-wide text-slate-500">
-                  {t(locale, "stages.gate")}
-                </h3>
-                <p className="mt-2 text-sm leading-relaxed text-slate-700">
-                  {pick(locale, stage.gate)}
-                </p>
-              </div>
-              <div>
-                <h3 className="text-xs font-semibold uppercase tracking-wide text-slate-500">
-                  {t(locale, "stages.outcomes")}
-                </h3>
-                <ul className="mt-2 list-disc space-y-1.5 pl-4 text-sm text-slate-700">
-                  {stage.outcomes.map((outcome) => (
-                    <li key={pick(locale, outcome)}>{pick(locale, outcome)}</li>
-                  ))}
-                </ul>
-              </div>
+            <div className="grid gap-4 p-4 lg:grid-cols-2">
+              <EditableCard
+                cardKey={`stage.${stage.id}.gate`}
+                title={t(locale, "stages.gate")}
+                locale={locale}
+                defaultIs={stage.gate.is}
+                defaultEn={stage.gate.en}
+                className="border-slate-100 shadow-none"
+              />
+              <EditableCard
+                cardKey={`stage.${stage.id}.outcomes`}
+                title={t(locale, "stages.outcomes")}
+                locale={locale}
+                defaultIs={stage.outcomes.map((o) => `• ${o.is}`).join("\n")}
+                defaultEn={stage.outcomes.map((o) => `• ${o.en}`).join("\n")}
+                asList
+                className="border-slate-100 shadow-none"
+              />
             </div>
           </article>
         ))}

@@ -1,9 +1,3 @@
-import {
-  CalendarDays,
-  CircleDollarSign,
-  ListChecks,
-  ShieldCheck,
-} from "lucide-react"
 import type { Locale } from "@/lib/i18n"
 import { t } from "@/lib/i18n"
 import {
@@ -17,22 +11,8 @@ import {
   stages,
   thesis,
   tolerances,
-  type ToleranceId,
 } from "@/lib/project-data"
-import { cn } from "@/lib/utils"
-
-const toleranceIcons: Record<ToleranceId, typeof CalendarDays> = {
-  time: CalendarDays,
-  cost: CircleDollarSign,
-  scope: ListChecks,
-  risk: ShieldCheck,
-}
-
-const toneClass = {
-  good: "text-emerald-700",
-  neutral: "text-blue-700",
-  watch: "text-amber-700",
-} as const
+import { EditableCard } from "@/components/editable-card"
 
 export function OverviewView({ locale }: { locale: Locale }) {
   return (
@@ -52,9 +32,14 @@ export function OverviewView({ locale }: { locale: Locale }) {
         <p className="mt-1 text-sm text-slate-500">
           {t(locale, "overview.subtitle")}
         </p>
-        <p className="mt-4 max-w-3xl rounded border border-blue-100 bg-blue-50/60 p-4 text-sm leading-relaxed text-slate-800">
-          {pick(locale, thesis)}
-        </p>
+        <EditableCard
+          className="mt-4 max-w-3xl border-blue-100 bg-blue-50/60"
+          cardKey="overview.thesis"
+          title={pick(locale, projectMeta.roleFocus)}
+          locale={locale}
+          defaultIs={thesis.is}
+          defaultEn={thesis.en}
+        />
       </div>
 
       <section>
@@ -67,70 +52,58 @@ export function OverviewView({ locale }: { locale: Locale }) {
           </p>
         </div>
         <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-          {tolerances.map((item) => {
-            const Icon = toleranceIcons[item.id]
-            return (
-              <div
-                key={item.id}
-                className="rounded border border-slate-200 bg-white p-4"
-              >
-                <div className="flex justify-between gap-2">
-                  <div>
-                    <p className="text-xs text-slate-500">
-                      {t(locale, `tolerance.${item.id}`)}
-                    </p>
-                    <p
-                      className={cn(
-                        "mt-1 text-xl font-semibold",
-                        toneClass[item.tone],
-                      )}
-                    >
-                      {pick(locale, item.value)}
-                    </p>
-                  </div>
-                  <span className="text-slate-400">
-                    <Icon size={17} />
-                  </span>
-                </div>
-                <div className="mt-4 h-1.5 rounded bg-slate-100">
-                  <div
-                    className={cn(
-                      "h-full rounded",
-                      item.tone === "watch" ? "w-1/2 bg-amber-500" : "w-3/4 bg-blue-600",
-                    )}
-                  />
-                </div>
-                <p className="mt-2 text-[11px] text-slate-500">
-                  {pick(locale, item.detail)}
-                </p>
-              </div>
-            )
-          })}
+          {tolerances.map((item) => (
+            <EditableCard
+              key={item.id}
+              cardKey={`overview.tolerance.${item.id}`}
+              title={t(locale, `tolerance.${item.id}`)}
+              locale={locale}
+              defaultIs={`${item.value.is}\n${item.detail.is}`}
+              defaultEn={`${item.value.en}\n${item.detail.en}`}
+            />
+          ))}
         </div>
       </section>
 
       <div className="grid gap-4 lg:grid-cols-2">
-        <Article
+        <EditableCard
+          cardKey="overview.justification"
           title={t(locale, "overview.justification")}
-          body={pick(locale, justification)}
+          locale={locale}
+          defaultIs={justification.is}
+          defaultEn={justification.en}
         />
-        <Article
+        <EditableCard
+          cardKey="overview.scope"
           title={t(locale, "overview.scope")}
-          body={pick(locale, scope)}
+          locale={locale}
+          defaultIs={scope.is}
+          defaultEn={scope.en}
         />
-        <ArticleList
+        <EditableCard
+          cardKey="overview.objectives"
           title={t(locale, "overview.objectives")}
-          items={objectives.map((o) => pick(locale, o))}
+          locale={locale}
+          defaultIs={objectives.map((o) => `• ${o.is}`).join("\n")}
+          defaultEn={objectives.map((o) => `• ${o.en}`).join("\n")}
+          asList
         />
-        <ArticleList
+        <EditableCard
+          cardKey="overview.benefits"
           title={t(locale, "overview.benefits")}
-          items={benefits.map((b) => pick(locale, b))}
+          locale={locale}
+          defaultIs={benefits.map((b) => `• ${b.is}`).join("\n")}
+          defaultEn={benefits.map((b) => `• ${b.en}`).join("\n")}
+          asList
         />
       </div>
 
-      <Article
+      <EditableCard
+        cardKey="overview.products"
         title={t(locale, "overview.products")}
-        body={pick(locale, productsSummary)}
+        locale={locale}
+        defaultIs={productsSummary.is}
+        defaultEn={productsSummary.en}
       />
 
       <section className="overflow-hidden rounded border border-slate-200 bg-white">
@@ -177,27 +150,5 @@ export function OverviewView({ locale }: { locale: Locale }) {
         </div>
       </section>
     </div>
-  )
-}
-
-function Article({ title, body }: { title: string; body: string }) {
-  return (
-    <section className="rounded border border-slate-200 bg-white p-5">
-      <h2 className="text-sm font-semibold text-slate-900">{title}</h2>
-      <p className="mt-2 text-sm leading-relaxed text-slate-600">{body}</p>
-    </section>
-  )
-}
-
-function ArticleList({ title, items }: { title: string; items: string[] }) {
-  return (
-    <section className="rounded border border-slate-200 bg-white p-5">
-      <h2 className="text-sm font-semibold text-slate-900">{title}</h2>
-      <ul className="mt-2 list-disc space-y-1.5 pl-4 text-sm leading-relaxed text-slate-600">
-        {items.map((item) => (
-          <li key={item}>{item}</li>
-        ))}
-      </ul>
-    </section>
   )
 }

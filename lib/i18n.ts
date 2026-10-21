@@ -144,6 +144,22 @@ const ui = {
     scope: { is: "Umfang", en: "Scope" },
     risk: { is: "Áhætta", en: "Risk" },
   },
+  cards: {
+    edit: { is: "Breyta", en: "Edit" },
+    save: { is: "Vista", en: "Save" },
+    cancel: { is: "Hætta við", en: "Cancel" },
+    font: { is: "Letur", en: "Font" },
+    size: { is: "Stærð", en: "Size" },
+    color: { is: "Litur", en: "Color" },
+    bold: { is: "Feitletrað", en: "Bold" },
+    italic: { is: "Skáletrað", en: "Italic" },
+    savedCloud: { is: "Vistað í Supabase", en: "Saved to Supabase" },
+    savedLocal: {
+      is: "Vistað á þessari tölvu (settu upp Supabase fyrir ský)",
+      en: "Saved on this device (configure Supabase for cloud)",
+    },
+    saveError: { is: "Villa við vistun", en: "Save failed" },
+  },
 } as const
 
 type Localized = { is: string; en: string }

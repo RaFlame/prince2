@@ -26,6 +26,7 @@ import { SettingsView } from "@/components/views/settings-view"
 import { StagesView } from "@/components/views/stages-view"
 import { TeamView } from "@/components/views/team-view"
 import { WikiView } from "@/components/views/wiki-view"
+import { CardsProvider } from "@/lib/cards-context"
 
 const navItems: {
   id: Section
@@ -62,6 +63,7 @@ export function AppShell() {
   }
 
   return (
+    <CardsProvider>
     <div className="min-h-screen bg-slate-100 text-slate-950">
       <aside className="fixed inset-y-0 hidden w-60 border-r border-slate-200 bg-white lg:block">
         <div className="flex h-16 items-center gap-3 border-b border-slate-200 px-5">
@@ -191,5 +193,6 @@ export function AppShell() {
         </main>
       </div>
     </div>
+    </CardsProvider>
   )
 }

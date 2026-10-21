@@ -1,6 +1,7 @@
 import type { Locale } from "@/lib/i18n"
 import { t } from "@/lib/i18n"
-import { documents, pick } from "@/lib/project-data"
+import { documents } from "@/lib/project-data"
+import { EditableCard } from "@/components/editable-card"
 
 export function DocumentsView({ locale }: { locale: Locale }) {
   return (
@@ -14,49 +15,18 @@ export function DocumentsView({ locale }: { locale: Locale }) {
         </p>
       </div>
 
-      <section className="overflow-hidden rounded border border-slate-200 bg-white">
-        <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs">
-            <thead className="bg-slate-50 text-slate-500">
-              <tr>
-                <th className="px-5 py-3 font-medium">
-                  {t(locale, "documents.name")}
-                </th>
-                <th className="px-5 py-3 font-medium">
-                  {t(locale, "documents.type")}
-                </th>
-                <th className="px-5 py-3 font-medium">
-                  {t(locale, "documents.stage")}
-                </th>
-                <th className="px-5 py-3 font-medium">
-                  {t(locale, "documents.status")}
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {documents.map((doc) => (
-                <tr
-                  className="border-t border-slate-100"
-                  key={pick(locale, doc.name)}
-                >
-                  <td className="px-5 py-3 font-medium text-slate-900">
-                    {pick(locale, doc.name)}
-                  </td>
-                  <td className="px-5 py-3">{pick(locale, doc.type)}</td>
-                  <td className="px-5 py-3 font-mono text-slate-600">
-                    {doc.stage}
-                  </td>
-                  <td className="px-5 py-3">
-                    <span className="rounded-full bg-slate-100 px-2 py-1 text-[11px]">
-                      {t(locale, `status.${doc.status}`)}
-                    </span>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </section>
+      <div className="grid gap-4 lg:grid-cols-2">
+        {documents.map((doc, index) => (
+          <EditableCard
+            key={`${doc.stage}-${index}`}
+            cardKey={`document.${index}`}
+            title={doc.name[locale]}
+            locale={locale}
+            defaultIs={`${doc.type.is}\n${t("is", "documents.stage")}: ${doc.stage}\n${t("is", "documents.status")}: ${t("is", `status.${doc.status}`)}`}
+            defaultEn={`${doc.type.en}\n${t("en", "documents.stage")}: ${doc.stage}\n${t("en", "documents.status")}: ${t("en", `status.${doc.status}`)}`}
+          />
+        ))}
+      </div>
     </div>
   )
 }

@@ -1,6 +1,7 @@
 import type { Locale } from "@/lib/i18n"
-import { loc, t } from "@/lib/i18n"
+import { t } from "@/lib/i18n"
 import { glossaryTerms } from "@/lib/glossary"
+import { EditableCard } from "@/components/editable-card"
 
 export function WikiView({ locale }: { locale: Locale }) {
   return (
@@ -14,58 +15,30 @@ export function WikiView({ locale }: { locale: Locale }) {
         </p>
       </div>
 
-      <section className="overflow-hidden rounded border border-slate-200 bg-white">
-        <div className="border-b border-slate-200 px-5 py-4">
-          <h2 className="text-sm font-semibold text-slate-900">
-            {t(locale, "wiki.glossaryTitle")}
-          </h2>
-          <p className="mt-1 text-xs text-slate-500">
-            {t(locale, "wiki.glossarySubtitle")}
-          </p>
-        </div>
-
-        <div className="border-b border-slate-100 bg-slate-50 px-5 py-3">
-          <h3 className="text-xs font-semibold uppercase tracking-wide text-slate-500">
-            {t(locale, "wiki.abbreviations")}
-          </h3>
-        </div>
-
-        <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs">
-            <thead className="bg-white text-slate-500">
-              <tr>
-                <th className="px-5 py-3 font-medium">
-                  {t(locale, "wiki.abbr")}
-                </th>
-                <th className="px-5 py-3 font-medium">
-                  {t(locale, "wiki.expansion")}
-                </th>
-                <th className="px-5 py-3 font-medium">
-                  {t(locale, "wiki.definition")}
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {glossaryTerms.map((term) => (
-                <tr
-                  className="border-t border-slate-100 align-top"
-                  key={term.abbr}
-                >
-                  <td className="px-5 py-3 font-mono text-sm font-semibold text-blue-800">
-                    {term.abbr}
-                  </td>
-                  <td className="px-5 py-3 font-medium text-slate-800">
-                    {loc(locale, term.expansion)}
-                  </td>
-                  <td className="px-5 py-3 leading-relaxed text-slate-600">
-                    {loc(locale, term.definition)}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+      <section className="rounded border border-slate-200 bg-white p-5">
+        <h2 className="text-sm font-semibold text-slate-900">
+          {t(locale, "wiki.glossaryTitle")}
+        </h2>
+        <p className="mt-1 text-xs text-slate-500">
+          {t(locale, "wiki.glossarySubtitle")}
+        </p>
+        <p className="mt-2 text-[11px] font-semibold uppercase tracking-wide text-slate-400">
+          {t(locale, "wiki.abbreviations")}
+        </p>
       </section>
+
+      <div className="grid gap-4 lg:grid-cols-2">
+        {glossaryTerms.map((term) => (
+          <EditableCard
+            key={term.abbr}
+            cardKey={`glossary.${term.abbr}`}
+            title={`${term.abbr} — ${term.expansion[locale]}`}
+            locale={locale}
+            defaultIs={term.definition.is}
+            defaultEn={term.definition.en}
+          />
+        ))}
+      </div>
     </div>
   )
 }
