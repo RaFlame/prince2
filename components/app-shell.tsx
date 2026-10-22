@@ -9,6 +9,8 @@ import {
   LayoutDashboard,
   Layers,
   Moon,
+  PanelLeftClose,
+  PanelLeftOpen,
   Settings2,
   ShieldAlert,
   Sun,
@@ -132,11 +134,14 @@ export function AppShell() {
   )
 }
 
+const SIDEBAR_STORAGE_KEY = "prince2-sidebar"
+
 function AppShellInner() {
   const { stageIdsByStatus } = useStageStatuses()
   const [locale, setLocale] = useState<Locale>("is")
   const [theme, setTheme] = useState<Theme>("light")
   const [section, setSection] = useState<Section>("overview")
+  const [sidebarOpen, setSidebarOpen] = useState(true)
   const [ready, setReady] = useState(false)
 
   const visibleScrumStageNav = useMemo(
@@ -162,6 +167,8 @@ function AppShellInner() {
     const nextTheme = readStoredTheme()
     setTheme(nextTheme)
     applyTheme(nextTheme)
+    const storedSidebar = window.localStorage.getItem(SIDEBAR_STORAGE_KEY)
+    if (storedSidebar === "closed") setSidebarOpen(false)
     setReady(true)
   }, [])
 
@@ -187,6 +194,17 @@ function AppShellInner() {
     storeTheme(next)
   }
 
+  function handleSidebarToggle() {
+    setSidebarOpen((open) => {
+      const next = !open
+      window.localStorage.setItem(
+        SIDEBAR_STORAGE_KEY,
+        next ? "open" : "closed",
+      )
+      return next
+    })
+  }
+
   const workspaceCrumb =
     section === "scrum" ||
     section === "scrumStages" ||
@@ -197,9 +215,21 @@ function AppShellInner() {
         ? t(locale, "workspaces.shared")
         : t(locale, "workspaces.prince2")
 
+  const sidebarLabel = sidebarOpen
+    ? t(locale, "sidebar.hide")
+    : t(locale, "sidebar.show")
+
   return (
     <div className="neo-deck min-h-screen text-[var(--ink)]">
-      <aside className="fixed inset-y-0 hidden w-60 border-r border-[var(--hairline)] bg-[var(--deck)] lg:block">
+      <aside
+        id="app-sidepanel"
+        className={cn(
+          "fixed inset-y-0 z-20 w-60 border-r border-[var(--hairline)] bg-[var(--deck)] transition-transform duration-200 ease-out",
+          "hidden lg:block",
+          sidebarOpen ? "translate-x-0" : "-translate-x-full",
+        )}
+        aria-hidden={!sidebarOpen}
+      >
         <div className="flex h-16 items-center gap-3 border-b border-[var(--hairline)] px-5">
           <div className="neo-mark">
             <LayoutDashboard size={16} />
@@ -250,17 +280,39 @@ function AppShellInner() {
         </nav>
       </aside>
 
-      <div className="lg:pl-60">
+      <div
+        className={cn(
+          "transition-[padding] duration-200 ease-out",
+          sidebarOpen ? "lg:pl-60" : "lg:pl-0",
+        )}
+      >
         <header className="sticky top-0 z-10 flex h-16 items-center justify-between gap-4 border-b border-[var(--hairline)] bg-[var(--deck)]/95 px-4 backdrop-blur-sm sm:px-6">
-          <span className="truncate text-xs text-[var(--mute-slate)]">
-            {workspaceCrumb} /{" "}
-            <b className="text-[var(--ink)]">
-              {pick(locale, projectMeta.name)}
-            </b>
-            <span className="ml-2 hidden text-[var(--mute-slate)] sm:inline">
-              · {pick(locale, projectMeta.organisation)}
+          <div className="flex min-w-0 items-center gap-2">
+            <button
+              type="button"
+              className="neo-theme-btn hidden shrink-0 lg:inline-flex"
+              onClick={handleSidebarToggle}
+              title={sidebarLabel}
+              aria-label={sidebarLabel}
+              aria-expanded={sidebarOpen}
+              aria-controls="app-sidepanel"
+            >
+              {sidebarOpen ? (
+                <PanelLeftClose size={15} />
+              ) : (
+                <PanelLeftOpen size={15} />
+              )}
+            </button>
+            <span className="truncate text-xs text-[var(--mute-slate)]">
+              {workspaceCrumb} /{" "}
+              <b className="text-[var(--ink)]">
+                {pick(locale, projectMeta.name)}
+              </b>
+              <span className="ml-2 hidden text-[var(--mute-slate)] sm:inline">
+                · {pick(locale, projectMeta.organisation)}
+              </span>
             </span>
-          </span>
+          </div>
           <div className="flex shrink-0 items-center gap-3">
             <div className="neo-locale flex" role="group">
               <button

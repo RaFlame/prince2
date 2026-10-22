@@ -22,8 +22,8 @@ const ui = {
   onTrack: { is: "Á áætlun", en: "On track" },
   atRisk: { is: "Í hættu", en: "At risk" },
   workspaces: {
-    prince2: { is: "Vinnusvæði 1 · PRINCE2", en: "Workspace 1 · PRINCE2" },
-    scrum: { is: "Vinnusvæði 2 · SCRUM", en: "Workspace 2 · SCRUM" },
+    prince2: { is: "PRINCE2", en: "PRINCE2" },
+    scrum: { is: "SCRUM", en: "SCRUM" },
     shared: { is: "Sameiginlegt", en: "Shared" },
   },
   nav: {
@@ -182,6 +182,10 @@ const ui = {
   theme: {
     toDark: { is: "Skipta í dökkt þema", en: "Switch to dark theme" },
     toLight: { is: "Skipta í ljóst þema", en: "Switch to light theme" },
+  },
+  sidebar: {
+    hide: { is: "Fela hliðarspjald", en: "Hide sidepanel" },
+    show: { is: "Sýna hliðarspjald", en: "Show sidepanel" },
   },
   status: {
     notStarted: { is: "Ekki hafið", en: "Not started" },
