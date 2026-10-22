@@ -2,7 +2,8 @@
 
 import type { Locale } from "@/lib/i18n"
 import { t } from "@/lib/i18n"
-import { pick, stages } from "@/lib/project-data"
+import { useProject } from "@/lib/project-context"
+import { pick } from "@/lib/project-types"
 import { EditableCard } from "@/components/editable-card"
 import { useStageStatuses } from "@/lib/stage-status-context"
 import {
@@ -59,7 +60,8 @@ export function ScrumStagesView({
   filterStatus: Exclude<StageStatus, "notStarted">
 }) {
   const { stageIdsByStatus, getStatus } = useStageStatuses()
-  const active = stages.filter((stage) =>
+  const { project } = useProject()
+  const active = project.stages.filter((stage) =>
     stageIdsByStatus(filterStatus).includes(stage.id),
   )
   const tone = pageTone[filterStatus]

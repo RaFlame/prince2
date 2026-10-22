@@ -78,7 +78,11 @@ export function CardsProvider({ children }: { children: React.ReactNode }) {
 
   const getCard = useCallback(
     (key: string, defaults: { is: string; en: string }): CardRecord => {
-      const existing = map[key]
+      const existing =
+        map[key] ??
+        (key.startsWith("fiskistofa:")
+          ? map[key.slice("fiskistofa:".length)]
+          : undefined)
       if (existing) {
         return {
           ...DEFAULT_CARD_STYLE,

@@ -2,7 +2,8 @@
 
 import type { Locale } from "@/lib/i18n"
 import { t } from "@/lib/i18n"
-import { pick, stages } from "@/lib/project-data"
+import { useProject } from "@/lib/project-context"
+import { pick } from "@/lib/project-types"
 import { EditableCard } from "@/components/editable-card"
 import { StageStatusSelect } from "@/components/stage-status-select"
 import { useStageStatuses } from "@/lib/stage-status-context"
@@ -11,6 +12,7 @@ import { cn } from "@/lib/utils"
 
 export function StagesView({ locale }: { locale: Locale }) {
   const { getStatus, setStatus } = useStageStatuses()
+  const { project } = useProject()
 
   return (
     <div className="space-y-6">
@@ -19,12 +21,12 @@ export function StagesView({ locale }: { locale: Locale }) {
           {t(locale, "stages.title")}
         </h1>
         <p className="mt-1 text-sm text-slate-500">
-          {t(locale, "stages.subtitle")}
+          {pick(locale, project.meta.stagesSubtitle)}
         </p>
       </div>
 
       <div className="space-y-4">
-        {stages.map((stage) => {
+        {project.stages.map((stage) => {
           const status = getStatus(stage.id)
           return (
             <article

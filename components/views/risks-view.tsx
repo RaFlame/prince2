@@ -1,9 +1,14 @@
+"use client"
+
 import type { Locale } from "@/lib/i18n"
 import { t } from "@/lib/i18n"
-import { pick, risks } from "@/lib/project-data"
+import { useProject } from "@/lib/project-context"
+import { pick } from "@/lib/project-types"
 import { EditableCard } from "@/components/editable-card"
 
 export function RisksView({ locale }: { locale: Locale }) {
+  const { project } = useProject()
+
   return (
     <div className="space-y-6">
       <div>
@@ -16,7 +21,7 @@ export function RisksView({ locale }: { locale: Locale }) {
       </div>
 
       <div className="grid gap-4 lg:grid-cols-2">
-        {risks.map((risk) => (
+        {project.risks.map((risk) => (
           <EditableCard
             key={risk.ref}
             cardKey={`risk.${risk.ref}`}
@@ -27,6 +32,15 @@ export function RisksView({ locale }: { locale: Locale }) {
           />
         ))}
       </div>
+
+      {project.risks.length === 0 && (
+        <p className="text-sm text-slate-500">
+          {pick(locale, {
+            is: "Engin áhætta skráð enn — bættu við í klippiborði eða breyttu kortum.",
+            en: "No risks recorded yet — add via edits on cards as you go.",
+          })}
+        </p>
+      )}
     </div>
   )
 }

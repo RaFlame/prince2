@@ -2,18 +2,8 @@
 
 import type { Locale } from "@/lib/i18n"
 import { t } from "@/lib/i18n"
-import {
-  benefits,
-  justification,
-  objectives,
-  pick,
-  productsSummary,
-  projectMeta,
-  scope,
-  stages,
-  thesis,
-  tolerances,
-} from "@/lib/project-data"
+import { useProject } from "@/lib/project-context"
+import { pick } from "@/lib/project-types"
 import { EditableCard } from "@/components/editable-card"
 import { useStageStatuses } from "@/lib/stage-status-context"
 import { stageStatusBadgeClass } from "@/lib/stage-status"
@@ -21,27 +11,40 @@ import { cn } from "@/lib/utils"
 
 export function OverviewView({ locale }: { locale: Locale }) {
   const { getStatus } = useStageStatuses()
+  const { project } = useProject()
+  const {
+    meta,
+    thesis,
+    tolerances,
+    justification,
+    scope,
+    objectives,
+    benefits,
+    productsSummary,
+    stages,
+  } = project
+
   return (
     <div className="space-y-6">
       <div>
         <div className="mb-2 flex flex-wrap items-center gap-2">
           <span className="rounded-full bg-emerald-50 px-2 py-1 text-xs font-medium text-emerald-700">
-            {t(locale, "onTrack")}
+            {t(locale, meta.status === "atRisk" ? "atRisk" : "onTrack")}
           </span>
           <span className="text-xs text-slate-500">
-            {t(locale, "lastUpdated")} {pick(locale, projectMeta.lastUpdated)}
+            {t(locale, "lastUpdated")} {pick(locale, meta.lastUpdated)}
           </span>
         </div>
         <h1 className="text-2xl font-semibold text-slate-950">
           {t(locale, "overview.title")}
         </h1>
         <p className="mt-1 text-sm text-slate-500">
-          {t(locale, "overview.subtitle")}
+          {pick(locale, meta.overviewSubtitle)}
         </p>
         <EditableCard
           className="mt-4 max-w-3xl border-blue-100 bg-blue-50/60"
           cardKey="overview.thesis"
-          title={pick(locale, projectMeta.roleFocus)}
+          title={pick(locale, meta.roleFocus)}
           locale={locale}
           defaultIs={thesis.is}
           defaultEn={thesis.en}

@@ -1,9 +1,13 @@
+"use client"
+
 import type { Locale } from "@/lib/i18n"
 import { t } from "@/lib/i18n"
-import { team } from "@/lib/project-data"
+import { useProject } from "@/lib/project-context"
 import { EditableCard } from "@/components/editable-card"
 
 export function TeamView({ locale }: { locale: Locale }) {
+  const { project } = useProject()
+
   return (
     <div className="space-y-6">
       <div>
@@ -16,9 +20,9 @@ export function TeamView({ locale }: { locale: Locale }) {
       </div>
 
       <div className="grid gap-4 lg:grid-cols-2">
-        {team.map((member, index) => (
+        {project.team.map((member, index) => (
           <EditableCard
-            key={index}
+            key={`${member.role.is}-${index}`}
             cardKey={`team.${index}`}
             title={`${member.role[locale]} · ${member.raci}`}
             locale={locale}

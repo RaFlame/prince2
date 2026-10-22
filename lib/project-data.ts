@@ -28,6 +28,14 @@ export const projectMeta = {
     is: "24 mánuðir (learning phase)",
     en: "24 months (learning phase)",
   } satisfies L,
+  overviewSubtitle: {
+    is: "Stjórnunaryfirlit fyrir myndgreiningareftirlit um borð.",
+    en: "Governance overview for onboard camera-based monitoring.",
+  } satisfies L,
+  stagesSubtitle: {
+    is: "Fjórir áfangar á 24 mánuðum — learning phase áður en floti er innleiddur.",
+    en: "Four stages over 24 months — learning phase before fleet rollout.",
+  } satisfies L,
 }
 
 export const justification: L = {

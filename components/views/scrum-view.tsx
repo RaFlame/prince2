@@ -1,9 +1,14 @@
+"use client"
+
 import type { Locale } from "@/lib/i18n"
 import { t } from "@/lib/i18n"
-import { pick } from "@/lib/project-data"
-import { scrumColumns, scrumMeta } from "@/lib/scrum-data"
+import { useProject } from "@/lib/project-context"
+import { pick } from "@/lib/project-types"
 
 export function ScrumView({ locale }: { locale: Locale }) {
+  const { project } = useProject()
+  const { scrumMeta, scrumColumns } = project
+
   return (
     <div className="space-y-6">
       <div>

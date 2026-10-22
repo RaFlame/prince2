@@ -6,6 +6,7 @@ import { Bold, Check, Italic, Loader2, X } from "lucide-react"
 import type { Locale } from "@/lib/i18n"
 import { t } from "@/lib/i18n"
 import { useCards } from "@/lib/cards-context"
+import { useProject } from "@/lib/project-context"
 import {
   CARD_COLORS,
   CARD_FONTS,
@@ -39,8 +40,10 @@ export function EditableCard({
   className,
   asList,
 }: Props) {
+  const { projectId } = useProject()
+  const scopedKey = `${projectId}:${cardKey}`
   const { getCard, saveCard, configured, ready } = useCards()
-  const stored = getCard(cardKey, { is: defaultIs, en: defaultEn })
+  const stored = getCard(scopedKey, { is: defaultIs, en: defaultEn })
   const textareaRef = useRef<HTMLTextAreaElement>(null)
   const titleId = useId()
 
@@ -55,9 +58,10 @@ export function EditableCard({
   }, [])
 
   useEffect(() => {
-    if (!editing) setDraft(getCard(cardKey, { is: defaultIs, en: defaultEn }))
+    if (!editing)
+      setDraft(getCard(scopedKey, { is: defaultIs, en: defaultEn }))
   }, [
-    cardKey,
+    scopedKey,
     defaultIs,
     defaultEn,
     getCard,
@@ -94,20 +98,20 @@ export function EditableCard({
     }
   }, [editing, saving])
 
-  const display = getCard(cardKey, { is: defaultIs, en: defaultEn })
+  const display = getCard(scopedKey, { is: defaultIs, en: defaultEn })
   const displayBody =
     locale === "is" ? display.content_is : display.content_en
   const draftBody = locale === "is" ? draft.content_is : draft.content_en
 
   function startEdit() {
     if (!ready || editing) return
-    setDraft(getCard(cardKey, { is: defaultIs, en: defaultEn }))
+    setDraft(getCard(scopedKey, { is: defaultIs, en: defaultEn }))
     setEditing(true)
     setMessage(null)
   }
 
   function cancel() {
-    setDraft(getCard(cardKey, { is: defaultIs, en: defaultEn }))
+    setDraft(getCard(scopedKey, { is: defaultIs, en: defaultEn }))
     setEditing(false)
     setMessage(null)
   }
@@ -117,7 +121,7 @@ export function EditableCard({
     setMessage(null)
     const result = await saveCard({
       ...draft,
-      card_key: cardKey,
+      card_key: scopedKey,
       updated_at: new Date().toISOString(),
     })
     setSaving(false)

@@ -101,8 +101,8 @@ const ui = {
   overview: {
     title: { is: "Yfirlit verkefnis", en: "Project overview" },
     subtitle: {
-      is: "Stjórnunaryfirlit fyrir myndgreiningareftirlit um borð.",
-      en: "Governance overview for onboard camera-based monitoring.",
+      is: "Stjórnunaryfirlit verkefnisins.",
+      en: "Project governance overview.",
     },
     justification: { is: "Viðskiptaleg réttlæting", en: "Business justification" },
     objectives: { is: "Markmið", en: "Objectives" },
@@ -119,8 +119,8 @@ const ui = {
   stages: {
     title: { is: "Áætlanir áfanga", en: "Stage plans" },
     subtitle: {
-      is: "Fjórir áfangar yfir 24 mánuði — learning phase áður en flotinn er innleiddur.",
-      en: "Four stages over 24 months — learning phase before fleet rollout.",
+      is: "Áfangar verkefnisins með hliðum og afurðum.",
+      en: "Project stages with gates and products.",
     },
     manager: { is: "Ábyrgð", en: "Owner" },
     progress: { is: "Framvinda", en: "Progress" },
@@ -186,6 +186,18 @@ const ui = {
   sidebar: {
     hide: { is: "Fela hliðarspjald", en: "Hide sidepanel" },
     show: { is: "Sýna hliðarspjald", en: "Show sidepanel" },
+  },
+  projects: {
+    switch: { is: "Skipta um verkefni", en: "Switch project" },
+    new: { is: "Nýtt verkefni", en: "New project" },
+    newTitle: { is: "Búa til verkefni", en: "Create project" },
+    newHint: {
+      is: "Grunnur með PRINCE2 áföngum — þú fyllir inn efni á eftir.",
+      en: "Starts with PRINCE2 stages — fill in content afterward.",
+    },
+    name: { is: "Heiti verkefnis", en: "Project name" },
+    organisation: { is: "Skipulagseining", en: "Organisation" },
+    create: { is: "Stofna", en: "Create" },
   },
   status: {
     notStarted: { is: "Ekki hafið", en: "Not started" },

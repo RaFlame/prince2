@@ -23,7 +23,8 @@ import {
   storeLocale,
   t,
 } from "@/lib/i18n"
-import { pick, projectMeta } from "@/lib/project-data"
+import { ProjectProvider, useProject } from "@/lib/project-context"
+import { pick } from "@/lib/project-types"
 import {
   applyTheme,
   readStoredTheme,
@@ -31,6 +32,7 @@ import {
   type Theme,
 } from "@/lib/theme"
 import { cn } from "@/lib/utils"
+import { ProjectSwitcher } from "@/components/project-switcher"
 import { DocumentsView } from "@/components/views/documents-view"
 import { OverviewView } from "@/components/views/overview-view"
 import { RisksView } from "@/components/views/risks-view"
@@ -126,11 +128,13 @@ function NavButton({
 
 export function AppShell() {
   return (
-    <CardsProvider>
-      <StageStatusProvider>
-        <AppShellInner />
-      </StageStatusProvider>
-    </CardsProvider>
+    <ProjectProvider>
+      <CardsProvider>
+        <StageStatusProvider>
+          <AppShellInner />
+        </StageStatusProvider>
+      </CardsProvider>
+    </ProjectProvider>
   )
 }
 
@@ -138,6 +142,7 @@ const SIDEBAR_STORAGE_KEY = "prince2-sidebar"
 
 function AppShellInner() {
   const { stageIdsByStatus } = useStageStatuses()
+  const { project } = useProject()
   const [locale, setLocale] = useState<Locale>("is")
   const [theme, setTheme] = useState<Theme>("light")
   const [section, setSection] = useState<Section>("overview")
@@ -303,13 +308,14 @@ function AppShellInner() {
                 <PanelLeftOpen size={15} />
               )}
             </button>
+            <ProjectSwitcher locale={locale} />
             <span className="truncate text-xs text-[var(--mute-slate)]">
               {workspaceCrumb} /{" "}
               <b className="text-[var(--ink)]">
-                {pick(locale, projectMeta.name)}
+                {pick(locale, project.meta.name)}
               </b>
               <span className="ml-2 hidden text-[var(--mute-slate)] sm:inline">
-                · {pick(locale, projectMeta.organisation)}
+                · {pick(locale, project.meta.organisation)}
               </span>
             </span>
           </div>
@@ -350,7 +356,7 @@ function AppShellInner() {
               {theme === "light" ? <Moon size={15} /> : <Sun size={15} />}
             </button>
             <span className="neo-chip hidden sm:inline-flex">
-              {pick(locale, projectMeta.duration)}
+              {pick(locale, project.meta.duration)}
             </span>
           </div>
         </header>

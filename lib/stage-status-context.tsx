@@ -8,7 +8,7 @@ import {
   useMemo,
   useState,
 } from "react"
-import { stages } from "@/lib/project-data"
+import { useProject } from "@/lib/project-context"
 import {
   readStoredStageStatuses,
   storeStageStatuses,
@@ -25,13 +25,15 @@ type StageStatusContextValue = {
 
 const StageStatusContext = createContext<StageStatusContextValue | null>(null)
 
-function defaultMap(): Record<string, StageStatus> {
+function defaultMap(
+  stages: { id: string; status: StageStatus }[],
+): Record<string, StageStatus> {
   return Object.fromEntries(
     stages.map((stage) => [stage.id, stage.status as StageStatus]),
   )
 }
 
-function snapshotStageCards(stageId: string) {
+function snapshotStageCards(projectId: string, stageId: string) {
   if (typeof window === "undefined") return
   try {
     const raw = window.localStorage.getItem("prince2-card-content")
@@ -40,11 +42,16 @@ function snapshotStageCards(stageId: string) {
       : {}
     let changed = false
     for (const part of ["gate", "outcomes"] as const) {
-      const sourceKey = `stage.${stageId}.${part}`
-      const targetKey = `scrum.stage.${stageId}.${part}`
-      if (cards[sourceKey] && !cards[targetKey]) {
+      const localKey = `stage.${stageId}.${part}`
+      const sourceKeys = [`${projectId}:${localKey}`, localKey]
+      const targetKey = `${projectId}:scrum.stage.${stageId}.${part}`
+      if (cards[targetKey]) continue
+      const source = sourceKeys
+        .map((k) => cards[k])
+        .find(Boolean)
+      if (source) {
         cards[targetKey] = {
-          ...cards[sourceKey],
+          ...source,
           card_key: targetKey,
         }
         changed = true
@@ -63,34 +70,40 @@ export function StageStatusProvider({
 }: {
   children: React.ReactNode
 }) {
-  const [map, setMap] = useState<Record<string, StageStatus>>(defaultMap)
+  const { projectId, project, ready: projectReady } = useProject()
+  const [map, setMap] = useState<Record<string, StageStatus>>({})
   const [ready, setReady] = useState(false)
 
   useEffect(() => {
-    setMap(readStoredStageStatuses(defaultMap()))
+    if (!projectReady) return
+    const defaults = defaultMap(project.stages)
+    setMap(readStoredStageStatuses(projectId, defaults))
     setReady(true)
-  }, [])
+  }, [projectReady, projectId, project.stages])
 
   const getStatus = useCallback(
     (stageId: string) => map[stageId] ?? "notStarted",
     [map],
   )
 
-  const setStatus = useCallback((stageId: string, status: StageStatus) => {
-    if (status === "inProgress" || status === "stopped" || status === "done") {
-      snapshotStageCards(stageId)
-    }
-    setMap((prev) => {
-      const next = { ...prev, [stageId]: status }
-      storeStageStatuses(next)
-      return next
-    })
-  }, [])
+  const setStatus = useCallback(
+    (stageId: string, status: StageStatus) => {
+      if (status === "inProgress" || status === "stopped" || status === "done") {
+        snapshotStageCards(projectId, stageId)
+      }
+      setMap((prev) => {
+        const next = { ...prev, [stageId]: status }
+        storeStageStatuses(projectId, next)
+        return next
+      })
+    },
+    [projectId],
+  )
 
   const stageIdsByStatus = useCallback(
     (status: StageStatus) =>
-      stages.map((stage) => stage.id).filter((id) => map[id] === status),
-    [map],
+      project.stages.map((stage) => stage.id).filter((id) => map[id] === status),
+    [map, project.stages],
   )
 
   const inProgressStageIds = useMemo(

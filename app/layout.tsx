@@ -31,9 +31,9 @@ const fontRounded = Nunito({
 })
 
 export const metadata: Metadata = {
-  title: "PRINCE2 Control | Myndgreiningareftirlit um borð",
+  title: "PRINCE2 Control",
   description:
-    "Stjórnunaryfirlit fyrir myndgreiningareftirlit Fiskistofu — PRINCE2 governance dashboard for onboard camera-based monitoring.",
+    "PRINCE2 stjórnunaryfirlit — governance dashboard for project control.",
 }
 
 export default function RootLayout({
