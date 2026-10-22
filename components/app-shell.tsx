@@ -45,6 +45,7 @@ import { StagesView } from "@/components/views/stages-view"
 import { TeamView } from "@/components/views/team-view"
 import { TherneyView } from "@/components/views/therney-view"
 import { TimelineView } from "@/components/views/timeline-view"
+import { UsageTracker } from "@/components/usage-tracker"
 import { WikiView } from "@/components/views/wiki-view"
 import { CardsProvider } from "@/lib/cards-context"
 import {
@@ -245,6 +246,7 @@ function AppShellInner() {
 
   return (
     <div className="neo-deck min-h-screen text-[var(--ink)]">
+      <UsageTracker section={section} />
       <aside
         id="app-sidepanel"
         className={cn(

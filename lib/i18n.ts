@@ -282,6 +282,22 @@ const ui = {
     },
     signedInAs: { is: "Skráð(ur) inn sem", en: "Signed in as" },
     signOut: { is: "Skrá út", en: "Sign out" },
+    usage: { is: "Notkun", en: "Usage" },
+    usageHint: {
+      is: "Innskráningar og virkni notenda (síðustu atburðir). Sjá einnig töfluna usage_events í Supabase.",
+      en: "Logins and user activity (recent events). Also see the usage_events table in Supabase.",
+    },
+    usageEmpty: {
+      is: "Engin atburðaskrá enn — keyrðu schema.sql og skráðu þig inn aftur.",
+      en: "No events yet — run schema.sql and sign in again.",
+    },
+    usageWhen: { is: "Tími", en: "When" },
+    usageUser: { is: "Notandi", en: "User" },
+    usageEvent: { is: "Atburður", en: "Event" },
+    usageLogin: { is: "Innskráning", en: "Login" },
+    usageSession: { is: "Lota", en: "Session" },
+    usageHeartbeat: { is: "Virkni", en: "Active" },
+    usageSection: { is: "Síða", en: "Section" },
   },
   theme: {
     toDark: { is: "Skipta í dökkt þema", en: "Switch to dark theme" },

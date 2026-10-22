@@ -61,3 +61,38 @@ create policy "Authenticated write project_state"
   to authenticated
   using (true)
   with check (true);
+
+-- Login + in-app usage events (for monitoring how often users use the app)
+create table if not exists public.usage_events (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid not null references auth.users (id) on delete cascade,
+  user_email text,
+  event_type text not null,
+  meta jsonb not null default '{}'::jsonb,
+  created_at timestamptz not null default now()
+);
+
+create index if not exists usage_events_created_at_idx
+  on public.usage_events (created_at desc);
+
+create index if not exists usage_events_user_id_idx
+  on public.usage_events (user_id, created_at desc);
+
+alter table public.usage_events enable row level security;
+
+drop policy if exists "Authenticated insert own usage" on public.usage_events;
+drop policy if exists "Authenticated read usage" on public.usage_events;
+
+-- Users may only insert rows for themselves
+create policy "Authenticated insert own usage"
+  on public.usage_events
+  for insert
+  to authenticated
+  with check (auth.uid() = user_id);
+
+-- All signed-in users can read (small internal team / boss overview)
+create policy "Authenticated read usage"
+  on public.usage_events
+  for select
+  to authenticated
+  using (true);
