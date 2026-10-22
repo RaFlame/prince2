@@ -28,6 +28,10 @@ type StageScheduleContextValue = {
   getSchedule: (stageId: string) => StageSchedule
   setStartDate: (stageId: string, startDate: string | null) => void
   setEndDate: (stageId: string, endDate: string | null) => void
+  setSchedule: (
+    stageId: string,
+    schedule: { startDate: string | null; endDate: string | null },
+  ) => void
 }
 
 const StageScheduleContext = createContext<StageScheduleContextValue | null>(
@@ -156,9 +160,35 @@ export function StageScheduleProvider({
     [projectId],
   )
 
+  const setSchedule = useCallback(
+    (
+      stageId: string,
+      schedule: { startDate: string | null; endDate: string | null },
+    ) => {
+      setMap((prev) => {
+        let { startDate, endDate } = schedule
+        if (startDate && endDate && endDate < startDate) {
+          endDate = startDate
+        }
+        const next = {
+          ...prev,
+          [stageId]: { startDate, endDate },
+        }
+        storeStageSchedules(projectId, next)
+        void saveProjectState({
+          projectId,
+          kind: "stage_schedule",
+          payload: next,
+        })
+        return next
+      })
+    },
+    [projectId],
+  )
+
   const value = useMemo(
-    () => ({ ready, getSchedule, setStartDate, setEndDate }),
-    [ready, getSchedule, setStartDate, setEndDate],
+    () => ({ ready, getSchedule, setStartDate, setEndDate, setSchedule }),
+    [ready, getSchedule, setStartDate, setEndDate, setSchedule],
   )
 
   return (

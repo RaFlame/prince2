@@ -1,11 +1,12 @@
 "use client"
 
-import type { Locale } from "@/lib/i18n"
+import type { Locale, Section } from "@/lib/i18n"
 import { t } from "@/lib/i18n"
 import { useProject } from "@/lib/project-context"
 import { pick } from "@/lib/project-types"
 import { EditableCard } from "@/components/editable-card"
 import { StageStatusSelect } from "@/components/stage-status-select"
+import { StagesSubnav } from "@/components/stages-subnav"
 import { useStageStatuses } from "@/lib/stage-status-context"
 import { useStageSchedules } from "@/lib/stage-schedule-context"
 import {
@@ -19,20 +20,33 @@ function localeTag(locale: Locale) {
   return locale === "is" ? "is-IS" : "en-GB"
 }
 
-export function StagesView({ locale }: { locale: Locale }) {
+export function StagesView({
+  locale,
+  onSelectSection,
+}: {
+  locale: Locale
+  onSelectSection: (id: Section) => void
+}) {
   const { getStatus, setStatus } = useStageStatuses()
   const { getSchedule, setStartDate, setEndDate } = useStageSchedules()
   const { project } = useProject()
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-semibold text-slate-950">
-          {t(locale, "stages.title")}
-        </h1>
-        <p className="mt-1 text-sm text-slate-500">
-          {pick(locale, project.meta.stagesSubtitle)}
-        </p>
+      <div className="flex flex-wrap items-end justify-between gap-3">
+        <div>
+          <h1 className="text-2xl font-semibold text-slate-950">
+            {t(locale, "stages.title")}
+          </h1>
+          <p className="mt-1 text-sm text-slate-500">
+            {pick(locale, project.meta.stagesSubtitle)}
+          </p>
+        </div>
+        <StagesSubnav
+          locale={locale}
+          active="stages"
+          onSelect={onSelectSection}
+        />
       </div>
 
       <div className="space-y-4">

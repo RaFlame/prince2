@@ -4,6 +4,7 @@ export type Section =
   | "overview"
   | "therney"
   | "stages"
+  | "timeline"
   | "risks"
   | "documents"
   | "wiki"
@@ -31,6 +32,7 @@ const ui = {
     overview: { is: "Yfirlit", en: "Overview" },
     therney: { is: "Þerney", en: "Therney" },
     stages: { is: "Áætlanir áfanga", en: "Stage plans" },
+    timeline: { is: "Tímalína", en: "Timeline" },
     risks: { is: "Áhættuskrá", en: "Risk register" },
     documents: { is: "Skjöl og afurðir", en: "Documents" },
     wiki: { is: "Wiki", en: "Wiki" },
@@ -201,6 +203,28 @@ const ui = {
     status: { is: "Staða", en: "Status" },
     gate: { is: "Go / no-go", en: "Go / no-go" },
     outcomes: { is: "Áætlaðar afurðir áfangans", en: "Planned stage outcomes" },
+    tabPlans: { is: "Áætlanir áfanga", en: "Stage plans" },
+    tabTimeline: { is: "Tímalína", en: "Timeline" },
+  },
+  timeline: {
+    title: { is: "Tímalína", en: "Timeline" },
+    subtitle: {
+      is: "Gantt-yfirlit áfanga — dragðu stikur til að breyta upphafs- og lokadegi.",
+      en: "Stage Gantt — drag bars to change start and end dates.",
+    },
+    today: { is: "Í dag", en: "Today" },
+    noDates: {
+      is: "Engin dagsetning — veldu upphaf hér",
+      en: "No dates — pick a start here",
+    },
+    setDefaultRange: {
+      is: "Setja byrjun (í dag → +3 mán.)",
+      en: "Set start (today → +3 mo.)",
+    },
+    dragHint: {
+      is: "Dragðu enda til að breyta dögum, eða miðju til að færa.",
+      en: "Drag edges to resize, or the middle to move.",
+    },
   },
   risks: {
     title: { is: "Áhættuskrá", en: "Risk register" },

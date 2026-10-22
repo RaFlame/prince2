@@ -91,6 +91,107 @@ export function formatScheduleDate(
   })
 }
 
+export function daysBetween(startIso: string, endIso: string): number {
+  const start = parseIsoDate(startIso)
+  const end = parseIsoDate(endIso)
+  return Math.round((end.getTime() - start.getTime()) / (24 * 60 * 60 * 1000))
+}
+
+export function addDays(iso: string, days: number): string {
+  const d = parseIsoDate(iso)
+  d.setDate(d.getDate() + days)
+  return toIsoDate(d)
+}
+
+export function clampIso(iso: string, minIso: string, maxIso: string): string {
+  if (iso < minIso) return minIso
+  if (iso > maxIso) return maxIso
+  return iso
+}
+
+/** Inclusive chart window covering all stage dates, with month padding. */
+export function computeGanttRange(
+  schedules: StageSchedule[],
+  today: Date = new Date(),
+): { rangeStart: string; rangeEnd: string } {
+  const dates: string[] = []
+  for (const s of schedules) {
+    if (s.startDate) dates.push(s.startDate)
+    if (s.endDate) dates.push(s.endDate)
+  }
+  const todayIso = toIsoDate(today)
+  if (dates.length === 0) {
+    return {
+      rangeStart: todayIso,
+      rangeEnd: addCalendarMonths(todayIso, 12),
+    }
+  }
+  dates.sort()
+  const min = dates[0]!
+  const max = dates[dates.length - 1]!
+  const paddedStart = addCalendarMonths(min, -1)
+  let paddedEnd = addCalendarMonths(max, 1)
+  if (paddedEnd < todayIso) paddedEnd = addCalendarMonths(todayIso, 1)
+  if (daysBetween(paddedStart, paddedEnd) < 60) {
+    paddedEnd = addCalendarMonths(paddedStart, 3)
+  }
+  return { rangeStart: paddedStart, rangeEnd: paddedEnd }
+}
+
+export function monthTicks(rangeStart: string, rangeEnd: string): string[] {
+  const ticks: string[] = []
+  const start = parseIsoDate(rangeStart)
+  const end = parseIsoDate(rangeEnd)
+  const cursor = new Date(start.getFullYear(), start.getMonth(), 1, 12)
+  while (cursor <= end) {
+    ticks.push(toIsoDate(cursor))
+    cursor.setMonth(cursor.getMonth() + 1)
+  }
+  return ticks
+}
+
+/** ISO-8601 week number and week-year for a calendar date. */
+export function isoWeekParts(iso: string): { week: number; year: number } {
+  const date = parseIsoDate(iso)
+  const utc = new Date(
+    Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()),
+  )
+  const dayNum = utc.getUTCDay() || 7
+  utc.setUTCDate(utc.getUTCDate() + 4 - dayNum)
+  const yearStart = new Date(Date.UTC(utc.getUTCFullYear(), 0, 1))
+  const week = Math.ceil(
+    ((utc.getTime() - yearStart.getTime()) / 86_400_000 + 1) / 7,
+  )
+  return { week, year: utc.getUTCFullYear() }
+}
+
+function startOfIsoWeek(iso: string): Date {
+  const date = parseIsoDate(iso)
+  const day = date.getDay()
+  const mondayOffset = day === 0 ? -6 : 1 - day
+  const monday = new Date(date)
+  monday.setDate(date.getDate() + mondayOffset)
+  monday.setHours(12, 0, 0, 0)
+  return monday
+}
+
+/**
+ * Week-start ticks (Mondays) across the range.
+ * Steps every 1 / 2 / 4 weeks depending on span so labels stay readable.
+ */
+export function weekTicks(rangeStart: string, rangeEnd: string): string[] {
+  const end = parseIsoDate(rangeEnd)
+  const span = daysBetween(rangeStart, rangeEnd)
+  const stepWeeks = span > 400 ? 4 : span > 180 ? 2 : 1
+  const cursor = startOfIsoWeek(rangeStart)
+  const ticks: string[] = []
+  while (cursor <= end) {
+    ticks.push(toIsoDate(cursor))
+    cursor.setDate(cursor.getDate() + 7 * stepWeeks)
+  }
+  return ticks
+}
+
 export function readStoredStageSchedules(
   projectId: string,
   stageIds: string[],

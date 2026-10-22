@@ -5,6 +5,7 @@ import {
   BookOpen,
   ClipboardList,
   FileText,
+  GanttChart,
   Kanban,
   LayoutDashboard,
   Layers,
@@ -43,6 +44,7 @@ import { SettingsView } from "@/components/views/settings-view"
 import { StagesView } from "@/components/views/stages-view"
 import { TeamView } from "@/components/views/team-view"
 import { TherneyView } from "@/components/views/therney-view"
+import { TimelineView } from "@/components/views/timeline-view"
 import { WikiView } from "@/components/views/wiki-view"
 import { CardsProvider } from "@/lib/cards-context"
 import {
@@ -62,6 +64,7 @@ type NavItem = {
 const prince2NavBase: NavItem[] = [
   { id: "overview", icon: LayoutDashboard },
   { id: "stages", icon: ClipboardList },
+  { id: "timeline", icon: GanttChart },
   { id: "risks", icon: ShieldAlert },
   { id: "documents", icon: FileText },
   { id: "wiki", icon: BookOpen },
@@ -399,7 +402,12 @@ function AppShellInner() {
         <main className="mx-auto max-w-[1500px] p-4 sm:p-6">
           {section === "overview" && <OverviewView locale={locale} />}
           {section === "therney" && <TherneyView locale={locale} />}
-          {section === "stages" && <StagesView locale={locale} />}
+          {section === "stages" && (
+            <StagesView locale={locale} onSelectSection={setSection} />
+          )}
+          {section === "timeline" && (
+            <TimelineView locale={locale} onSelectSection={setSection} />
+          )}
           {section === "risks" && <RisksView locale={locale} />}
           {section === "documents" && <DocumentsView locale={locale} />}
           {section === "wiki" && <WikiView locale={locale} />}
