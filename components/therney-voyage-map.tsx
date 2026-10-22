@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect } from "react"
+import { useEffect, useMemo } from "react"
 import {
   MapContainer,
   TileLayer,
@@ -27,6 +27,13 @@ const arrivalIcon = L.divIcon({
   iconAnchor: [6, 6],
 })
 
+const vesselIcon = L.divIcon({
+  className: "",
+  html: `<span style="display:block;width:14px;height:14px;border-radius:9999px;background:#c2410c;border:2px solid #fff;box-shadow:0 1px 3px rgba(0,0,0,.4)"></span>`,
+  iconSize: [14, 14],
+  iconAnchor: [7, 7],
+})
+
 function FitBounds({ points }: { points: LatLng[] }) {
   const map = useMap()
   useEffect(() => {
@@ -37,18 +44,26 @@ function FitBounds({ points }: { points: LatLng[] }) {
   return null
 }
 
-export function TherneyVoyageMap() {
+export function TherneyVoyageMap({
+  livePosition = null,
+}: {
+  livePosition?: LatLng | null
+}) {
   const past = therneyVoyage.pastTrack
   const forecast = therneyVoyage.routeForecast
-  const allPoints = [...past, ...forecast]
+  const allPoints = useMemo(() => {
+    const base = [...past, ...forecast]
+    if (livePosition) return [...base, livePosition]
+    return base
+  }, [past, forecast, livePosition])
 
   return (
     <MapContainer
-      className="h-[200px] w-full rounded-sm"
+      className="h-full min-h-[8rem] w-full"
       center={[61.5, -2.5]}
       zoom={4}
       scrollWheelZoom={false}
-      style={{ zIndex: 0 }}
+      style={{ zIndex: 0, height: "100%", width: "100%" }}
     >
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
@@ -90,6 +105,14 @@ export function TherneyVoyageMap() {
           {therneyVoyage.arrival.place.en} {therneyVoyage.arrival.code}
         </Popup>
       </Marker>
+      {livePosition && (
+        <Marker
+          position={[livePosition.lat, livePosition.lng]}
+          icon={vesselIcon}
+        >
+          <Popup>THERNEY (live AIS)</Popup>
+        </Marker>
+      )}
     </MapContainer>
   )
 }

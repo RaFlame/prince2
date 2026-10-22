@@ -65,6 +65,20 @@ const ui = {
       en: "Actual time of departure",
     },
     reportedEta: { is: "Tilkynnt ETA", en: "Reported ETA" },
+    lastReported: {
+      is: "Síðast tilkynnt",
+      en: "Last reported",
+    },
+    refreshVoyage: { is: "Uppfæra", en: "Refresh" },
+    refreshingVoyage: { is: "Sæki…", en: "Refreshing…" },
+    refreshVoyageOk: {
+      is: "Uppfært úr AIS (MarineTraffic-gögn)",
+      en: "Updated from AIS (MarineTraffic data)",
+    },
+    refreshVoyageError: {
+      is: "Gat ekki sótt nýjustu gögn",
+      en: "Could not fetch latest data",
+    },
     pastTrack: { is: "Fyrri ferill", en: "Past track" },
     routeForecast: { is: "Áætluð leið", en: "Route forecast" },
     name: { is: "Nafn", en: "Name" },
