@@ -50,6 +50,7 @@ import {
   useStageStatuses,
 } from "@/lib/stage-status-context"
 import { StageScheduleProvider } from "@/lib/stage-schedule-context"
+import { ScrumBoardProvider } from "@/lib/scrum-board-context"
 import type { StageStatus } from "@/lib/stage-status"
 
 type NavItem = {
@@ -137,7 +138,9 @@ export function AppShell() {
       <CardsProvider>
         <StageStatusProvider>
           <StageScheduleProvider>
-            <AppShellInner />
+            <ScrumBoardProvider>
+              <AppShellInner />
+            </ScrumBoardProvider>
           </StageScheduleProvider>
         </StageStatusProvider>
       </CardsProvider>

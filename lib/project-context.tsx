@@ -9,6 +9,13 @@ import {
   useState,
 } from "react"
 import type { Project } from "@/lib/project-types"
+import { GLOBAL_PROJECT_ID } from "@/lib/project-state"
+import {
+  fetchProjectState,
+  resolveWithMigration,
+  rowForKind,
+  saveProjectState,
+} from "@/lib/project-state-sync"
 import {
   createBlankProject,
   DEFAULT_PROJECT_ID,
@@ -35,6 +42,26 @@ const ProjectContext = createContext<ProjectContextValue | null>(null)
 const fallbackProject =
   getBuiltinProject(DEFAULT_PROJECT_ID) ?? listProjects()[0]
 
+function parseCustomProjects(payload: unknown): Project[] {
+  if (!Array.isArray(payload)) return []
+  return payload.filter(
+    (p): p is Project =>
+      !!p &&
+      typeof p === "object" &&
+      typeof (p as Project).id === "string" &&
+      !(p as Project).builtin,
+  )
+}
+
+function persistCustom(list: Project[]) {
+  storeCustomProjects(list)
+  void saveProjectState({
+    projectId: GLOBAL_PROJECT_ID,
+    kind: "custom_projects",
+    payload: list,
+  })
+}
+
 export function ProjectProvider({ children }: { children: React.ReactNode }) {
   const [custom, setCustom] = useState<Project[]>([])
   const [projectId, setProjectIdState] = useState(DEFAULT_PROJECT_ID)
@@ -47,11 +74,42 @@ export function ProjectProvider({ children }: { children: React.ReactNode }) {
   }, [projects, projectId])
 
   useEffect(() => {
-    const loaded = readCustomProjects()
-    setCustom(loaded)
-    const ids = listProjects(loaded).map((p) => p.id)
+    let cancelled = false
+    const local = readCustomProjects()
+    setCustom(local)
+    const ids = listProjects(local).map((p) => p.id)
     setProjectIdState(readStoredProjectId(ids))
-    setReady(true)
+
+    async function load() {
+      // Use default project id to fetch; custom_projects is always _global
+      const result = await fetchProjectState(DEFAULT_PROJECT_ID)
+      if (cancelled) return
+      if (!result.configured) {
+        setReady(true)
+        return
+      }
+      const row = rowForKind(result.rows, "custom_projects")
+      const resolved = await resolveWithMigration({
+        projectId: GLOBAL_PROJECT_ID,
+        kind: "custom_projects",
+        serverPayload: row?.payload,
+        localPayload: local,
+        isLocalEmpty: (payload) => payload.length === 0,
+      })
+      if (cancelled) return
+      const next = parseCustomProjects(resolved.payload)
+      storeCustomProjects(next)
+      setCustom(next)
+      const nextIds = listProjects(next).map((p) => p.id)
+      setProjectIdState((prev) =>
+        nextIds.includes(prev) ? prev : readStoredProjectId(nextIds),
+      )
+      setReady(true)
+    }
+    void load()
+    return () => {
+      cancelled = true
+    }
   }, [])
 
   const setProjectId = useCallback(
@@ -72,7 +130,7 @@ export function ProjectProvider({ children }: { children: React.ReactNode }) {
       })
       setCustom((prev) => {
         const list = [...prev, next]
-        storeCustomProjects(list)
+        persistCustom(list)
         return list
       })
       setProjectIdState(next.id)

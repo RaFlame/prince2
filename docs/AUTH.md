@@ -7,8 +7,19 @@ PRINCE2 Control uses **Supabase Auth** with email + password. There is **no publ
 1. In Supabase → **Authentication** → **Providers** → Email: enable Email.
 2. In **Authentication** → **Providers** → Email: turn **off** “Confirm email” if you want users to log in immediately with the password you set (recommended for small internal teams). Or leave confirm on and use Invite instead.
 3. Optional but recommended: **Authentication** → **Settings** → disable public sign-ups if the toggle is available (or simply never expose a sign-up page — this app has none).
-4. Run the updated SQL in `supabase/schema.sql` so `card_content` is only writable by authenticated users.
+4. Run the full SQL in `supabase/schema.sql` (creates `card_content` and `project_state`, with RLS for authenticated users only). Re-run after schema updates so new tables/policies apply.
 5. Ensure Vercel has the same `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` as `.env.local`.
+
+## What syncs across devices
+
+Signed-in users share the same **project workspace** via Supabase (last write wins; refresh to see others’ changes):
+
+- Editable card text (`card_content`)
+- Stage statuses and start/end dates (`project_state`)
+- SCRUM board tasks and placements (`project_state`)
+- Custom projects (`project_state`, global row)
+
+**Stays on the device only:** theme, language (IS/EN), and which project is selected in the switcher.
 
 ## 2. Create a user and email them credentials
 

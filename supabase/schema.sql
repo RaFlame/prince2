@@ -34,3 +34,30 @@ create policy "Authenticated write cards"
   to authenticated
   using (true)
   with check (true);
+
+-- Shared project workspace (stage status, schedules, SCRUM, custom projects)
+create table if not exists public.project_state (
+  project_id text not null,
+  kind text not null,
+  payload jsonb not null default '{}'::jsonb,
+  updated_at timestamptz not null default now(),
+  primary key (project_id, kind)
+);
+
+alter table public.project_state enable row level security;
+
+drop policy if exists "Authenticated read project_state" on public.project_state;
+drop policy if exists "Authenticated write project_state" on public.project_state;
+
+create policy "Authenticated read project_state"
+  on public.project_state
+  for select
+  to authenticated
+  using (true);
+
+create policy "Authenticated write project_state"
+  on public.project_state
+  for all
+  to authenticated
+  using (true)
+  with check (true);

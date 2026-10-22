@@ -10,6 +10,13 @@ import {
 } from "react"
 import { useProject } from "@/lib/project-context"
 import {
+  fetchProjectState,
+  resolveWithMigration,
+  rowForKind,
+  saveProjectState,
+} from "@/lib/project-state-sync"
+import {
+  STAGE_STATUSES,
   readStoredStageStatuses,
   storeStageStatuses,
   type StageStatus,
@@ -33,6 +40,22 @@ function defaultMap(
   )
 }
 
+function parseStatusPayload(
+  payload: unknown,
+  defaults: Record<string, StageStatus>,
+): Record<string, StageStatus> {
+  if (!payload || typeof payload !== "object" || Array.isArray(payload)) {
+    return { ...defaults }
+  }
+  const next = { ...defaults }
+  for (const [id, value] of Object.entries(payload as Record<string, unknown>)) {
+    if (typeof value === "string" && STAGE_STATUSES.includes(value as StageStatus)) {
+      next[id] = value as StageStatus
+    }
+  }
+  return next
+}
+
 function snapshotStageCards(projectId: string, stageId: string) {
   if (typeof window === "undefined") return
   try {
@@ -46,9 +69,7 @@ function snapshotStageCards(projectId: string, stageId: string) {
       const sourceKeys = [`${projectId}:${localKey}`, localKey]
       const targetKey = `${projectId}:scrum.stage.${stageId}.${part}`
       if (cards[targetKey]) continue
-      const source = sourceKeys
-        .map((k) => cards[k])
-        .find(Boolean)
+      const source = sourceKeys.map((k) => cards[k]).find(Boolean)
       if (source) {
         cards[targetKey] = {
           ...source,
@@ -76,9 +97,37 @@ export function StageStatusProvider({
 
   useEffect(() => {
     if (!projectReady) return
+    let cancelled = false
     const defaults = defaultMap(project.stages)
-    setMap(readStoredStageStatuses(projectId, defaults))
-    setReady(true)
+    const local = readStoredStageStatuses(projectId, defaults)
+    setMap(local)
+
+    async function load() {
+      const result = await fetchProjectState(projectId)
+      if (cancelled) return
+      if (!result.configured) {
+        setReady(true)
+        return
+      }
+      const row = rowForKind(result.rows, "stage_status", projectId)
+      const resolved = await resolveWithMigration({
+        projectId,
+        kind: "stage_status",
+        serverPayload: row?.payload,
+        localPayload: local,
+        isLocalEmpty: (payload) =>
+          Object.keys(payload).every((id) => payload[id] === defaults[id]),
+      })
+      if (cancelled) return
+      const next = parseStatusPayload(resolved.payload, defaults)
+      storeStageStatuses(projectId, next)
+      setMap(next)
+      setReady(true)
+    }
+    void load()
+    return () => {
+      cancelled = true
+    }
   }, [projectReady, projectId, project.stages])
 
   const getStatus = useCallback(
@@ -94,6 +143,11 @@ export function StageStatusProvider({
       setMap((prev) => {
         const next = { ...prev, [stageId]: status }
         storeStageStatuses(projectId, next)
+        void saveProjectState({
+          projectId,
+          kind: "stage_status",
+          payload: next,
+        })
         return next
       })
     },

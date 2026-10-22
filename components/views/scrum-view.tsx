@@ -9,12 +9,11 @@ import { useProject } from "@/lib/project-context"
 import { pick, type ScrumColumnId } from "@/lib/project-types"
 import {
   nextScrumTaskId,
-  readScrumBoardState,
   scrumColumnForStage,
-  storeScrumBoardState,
   type ScrumPrepColumn,
   type ScrumTask,
 } from "@/lib/scrum-board"
+import { useScrumBoard } from "@/lib/scrum-board-context"
 import {
   stageStatusBadgeClass,
   type StageStatus,
@@ -42,15 +41,19 @@ type BoardCard =
 const COLUMN_IDS: ScrumColumnId[] = ["backlog", "todo", "doing", "done"]
 
 export function ScrumView({ locale }: { locale: Locale }) {
-  const { project, projectId } = useProject()
+  const { project } = useProject()
   const { getStatus, setStatus, ready: statusReady } = useStageStatuses()
+  const {
+    tasks,
+    stagePrep: prep,
+    ready: boardReady,
+    setTasks,
+    setStagePrep,
+  } = useScrumBoard()
   const { scrumMeta, scrumColumns, stages } = project
 
-  const [tasks, setTasks] = useState<ScrumTask[]>([])
-  const [prep, setPrep] = useState<Record<string, ScrumPrepColumn>>({})
   const [dragId, setDragId] = useState<string | null>(null)
   const [overColumn, setOverColumn] = useState<ScrumColumnId | null>(null)
-  const [boardReady, setBoardReady] = useState(false)
   const [editingTaskId, setEditingTaskId] = useState<string | null>(null)
   const [mounted, setMounted] = useState(false)
   const editTitleId = useId()
@@ -59,55 +62,29 @@ export function ScrumView({ locale }: { locale: Locale }) {
     setMounted(true)
   }, [])
 
-  useEffect(() => {
-    const state = readScrumBoardState(projectId, scrumColumns)
-    setTasks(state.tasks)
-    setPrep(state.stagePrep)
-    setBoardReady(true)
-  }, [projectId, scrumColumns])
-
-  const persist = useCallback(
-    (
-      nextTasks: ScrumTask[],
-      nextPrep: Record<string, ScrumPrepColumn>,
-    ) => {
-      storeScrumBoardState(projectId, {
-        tasks: nextTasks,
-        stagePrep: nextPrep,
-      })
-    },
-    [projectId],
-  )
-
   const updatePrep = useCallback(
     (stageId: string, column: ScrumPrepColumn) => {
-      setPrep((prev) => {
-        const next = { ...prev, [stageId]: column }
-        persist(tasks, next)
-        return next
-      })
+      setStagePrep((prev) => ({ ...prev, [stageId]: column }))
     },
-    [persist, tasks],
+    [setStagePrep],
   )
 
   const moveTask = useCallback(
     (taskId: string, column: ScrumColumnId) => {
-      setTasks((prev) => {
-        const next = prev.map((task) =>
+      setTasks((prev) =>
+        prev.map((task) =>
           task.id === taskId ? { ...task, column } : task,
-        )
-        persist(next, prep)
-        return next
-      })
+        ),
+      )
     },
-    [persist, prep],
+    [setTasks],
   )
 
   const addTask = useCallback(
     (column: ScrumColumnId) => {
       setTasks((prev) => {
         const id = nextScrumTaskId(prev)
-        const next: ScrumTask[] = [
+        return [
           ...prev,
           {
             id,
@@ -122,31 +99,25 @@ export function ScrumView({ locale }: { locale: Locale }) {
             },
           },
         ]
-        persist(next, prep)
-        return next
       })
     },
-    [persist, prep],
+    [setTasks],
   )
 
   const deleteTask = useCallback(
     (taskId: string) => {
-      setTasks((prev) => {
-        const next = prev.filter((task) => task.id !== taskId)
-        persist(next, prep)
-        return next
-      })
+      setTasks((prev) => prev.filter((task) => task.id !== taskId))
       if (editingTaskId === taskId) setEditingTaskId(null)
     },
-    [persist, prep, editingTaskId],
+    [setTasks, editingTaskId],
   )
 
   const saveTaskEdit = useCallback(
     (taskId: string, title: string, detail: string) => {
       const trimmedTitle = title.trim() || t(locale, "scrum.newTaskTitle")
       const trimmedDetail = detail.trim()
-      setTasks((prev) => {
-        const synced = prev.map((task) => {
+      setTasks((prev) =>
+        prev.map((task) => {
           if (task.id !== taskId) return task
           return {
             ...task,
@@ -179,13 +150,11 @@ export function ScrumView({ locale }: { locale: Locale }) {
                     : task.detail.en,
             },
           }
-        })
-        persist(synced, prep)
-        return synced
-      })
+        }),
+      )
       setEditingTaskId(null)
     },
-    [locale, persist, prep],
+    [locale, setTasks],
   )
 
   const stageCards: BoardCard[] = useMemo(() => {
