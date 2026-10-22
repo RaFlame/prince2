@@ -32,7 +32,7 @@ The app writes rows to `public.usage_events`:
 | `section` | User opens a sidebar section |
 | `heartbeat` | About every 5 minutes while the tab is visible |
 
-View recent activity under **Stillingar → Notkun**, or in Supabase → **Table Editor → usage_events**. Example SQL:
+Inspect activity in Supabase → **Table Editor → usage_events** (or SQL Editor). Example queries:
 
 ```sql
 -- Logins per user (last 30 days)
