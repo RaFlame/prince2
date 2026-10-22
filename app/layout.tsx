@@ -42,6 +42,7 @@ export default function RootLayout({
   return (
     <html lang="is" suppressHydrationWarning>
       <body
+        suppressHydrationWarning
         className={`${fontSans.variable} ${fontSerif.variable} ${fontDisplay.variable} ${fontMono.variable} ${fontRounded.variable} antialiased`}
       >
         <Script id="prince2-theme-init" strategy="beforeInteractive">

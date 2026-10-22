@@ -362,6 +362,45 @@ html.dark .hover\:bg-slate-50:hover {
   background-color: color-mix(in srgb, var(--panel) 80%, var(--neo-light));
 }
 
+/* Risk severity surfaces (Áhættuskrá) */
+html.dark .bg-rose-50,
+html.dark .bg-rose-100 {
+  background-color: color-mix(in srgb, #881337 45%, var(--panel));
+}
+html.dark .border-rose-300,
+html.dark .hover\:border-rose-400:hover {
+  border-color: color-mix(in srgb, #fb7185 55%, var(--hairline));
+}
+html.dark .text-rose-800,
+html.dark .text-rose-900 {
+  color: #fecdd3;
+}
+html.dark .bg-amber-50,
+html.dark .bg-amber-50\/70,
+html.dark .bg-amber-100 {
+  background-color: color-mix(in srgb, #92400e 40%, var(--panel));
+}
+html.dark .border-amber-300,
+html.dark .hover\:border-amber-400:hover {
+  border-color: color-mix(in srgb, #fbbf24 50%, var(--hairline));
+}
+html.dark .text-amber-900,
+html.dark .text-amber-950 {
+  color: #fde68a;
+}
+html.dark .bg-sky-50,
+html.dark .bg-sky-50\/70,
+html.dark .bg-sky-100 {
+  background-color: color-mix(in srgb, #075985 40%, var(--panel));
+}
+html.dark .border-sky-200,
+html.dark .hover\:border-sky-300:hover {
+  border-color: color-mix(in srgb, #38bdf8 45%, var(--hairline));
+}
+html.dark .text-sky-900 {
+  color: #bae6fd;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .neo-btn-primary,
   .neo-icon-btn,

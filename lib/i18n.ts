@@ -42,9 +42,26 @@ const ui = {
   scrum: {
     title: { is: "SCRUM — sprettaborð", en: "SCRUM — sprint board" },
     subtitle: {
-      is: "Vinnusvæði 2: sprettir fyrir learning phase, samhliða PRINCE2 stjórnun.",
-      en: "Workspace 2: sprints for the learning phase, alongside PRINCE2 governance.",
+      is: "Áfangar í „Ekki hafið“ lenda í Baklogg. Dragðu yfir í Að gera þegar þú undirbýrð áfanga fyrir Í vinnslu.",
+      en: "Stages marked “Not started” land in Backlog. Drag to To do when you start preparing a stage for In progress.",
     },
+    stageCard: { is: "Áfangi", en: "Stage" },
+    taskCard: { is: "Verkefni", en: "Task" },
+    dragHint: {
+      is: "Dragðu áfanga og verkefni milli dálka",
+      en: "Drag stages and tasks between columns",
+    },
+    dropHere: { is: "Slepptu hér", en: "Drop here" },
+    addTask: { is: "Bæta við verkefni", en: "Add task" },
+    deleteTask: { is: "Eyða verkefni", en: "Delete task" },
+    newTaskTitle: { is: "Nýtt verkefni", en: "New task" },
+    newTaskDetail: {
+      is: "Lýsing — smelltu til að breyta.",
+      en: "Description — click to edit.",
+    },
+    editTask: { is: "Breyta verkefni", en: "Edit task" },
+    taskTitle: { is: "Titill", en: "Title" },
+    taskDetail: { is: "Lýsing", en: "Detail" },
     stagesTitle: {
       is: "Áfangar í vinnslu",
       en: "Stages in progress",
