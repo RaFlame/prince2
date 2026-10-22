@@ -121,10 +121,10 @@ export function ScrumStagesView({
                     >
                       {t(locale, `status.${status}`)}
                     </span>
-                    <span className="rounded border border-slate-200 bg-white/70 px-2 py-1 text-slate-600">
+                    <span className="neo-meta-badge">
                       {t(locale, "stages.progress")}: {stage.progress}%
                     </span>
-                    <span className="rounded border border-slate-200 bg-white/70 px-2 py-1 text-slate-600">
+                    <span className="neo-meta-badge">
                       {t(locale, "stages.endDate")}:{" "}
                       {pick(locale, stage.endDate)}
                     </span>

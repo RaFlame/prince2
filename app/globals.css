@@ -279,6 +279,21 @@ body {
   font-weight: 500;
 }
 
+/* Stage header meta (progress, end date) — theme tokens, not slate/white */
+.neo-meta-badge {
+  display: inline-flex;
+  align-items: center;
+  border-radius: var(--radius-sm);
+  padding: 0.25rem 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  line-height: 1.25;
+  color: var(--ink);
+  background: var(--deck);
+  border: 1px solid var(--hairline);
+  box-shadow: var(--shadow-raised-sm);
+}
+
 .neo-field {
   background: var(--deck);
   border: none;
