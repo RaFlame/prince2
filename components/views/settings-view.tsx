@@ -1,5 +1,9 @@
+"use client"
+
+import { useEffect, useState } from "react"
 import type { Locale } from "@/lib/i18n"
 import { t } from "@/lib/i18n"
+import { createBrowserSupabase } from "@/lib/supabase/client"
 import { cn } from "@/lib/utils"
 
 export function SettingsView({
@@ -9,6 +13,16 @@ export function SettingsView({
   locale: Locale
   onLocaleChange: (locale: Locale) => void
 }) {
+  const [email, setEmail] = useState<string | null>(null)
+
+  useEffect(() => {
+    const supabase = createBrowserSupabase()
+    if (!supabase) return
+    void supabase.auth.getUser().then(({ data }) => {
+      setEmail(data.user?.email ?? null)
+    })
+  }, [])
+
   return (
     <div className="space-y-6">
       <div>
@@ -19,6 +33,26 @@ export function SettingsView({
           {t(locale, "settings.subtitle")}
         </p>
       </div>
+
+      <section className="max-w-xl rounded border border-slate-200 bg-white p-5">
+        <h2 className="text-sm font-semibold text-slate-900">
+          {t(locale, "settings.account")}
+        </h2>
+        <p className="mt-1 text-xs text-slate-500">
+          {t(locale, "settings.accountHint")}
+        </p>
+        {email && (
+          <p className="mt-3 text-sm text-slate-800">
+            {t(locale, "settings.signedInAs")}:{" "}
+            <span className="font-medium">{email}</span>
+          </p>
+        )}
+        <form action="/auth/signout" method="post" className="mt-4">
+          <button type="submit" className="neo-btn-primary">
+            {t(locale, "settings.signOut")}
+          </button>
+        </form>
+      </section>
 
       <section className="max-w-xl rounded border border-slate-200 bg-white p-5">
         <h2 className="text-sm font-semibold text-slate-900">

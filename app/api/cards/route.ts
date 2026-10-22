@@ -1,21 +1,27 @@
 import { NextResponse } from "next/server"
-import { createClient } from "@supabase/supabase-js"
 import type { CardRecord } from "@/lib/card-style"
-
-function serverClient() {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL
-  const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-  if (!url || !key) return null
-  return createClient(url, key)
-}
+import { createServerSupabase } from "@/lib/supabase/server"
+import { isSupabaseConfigured } from "@/lib/supabase/env"
 
 export async function GET() {
-  const supabase = serverClient()
+  if (!isSupabaseConfigured()) {
+    return NextResponse.json({
+      configured: false,
+      cards: [] as CardRecord[],
+    })
+  }
+
+  const supabase = await createServerSupabase()
   if (!supabase) {
     return NextResponse.json({
       configured: false,
       cards: [] as CardRecord[],
     })
+  }
+
+  const { data: claimsData } = await supabase.auth.getClaims()
+  if (!claimsData?.claims) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
   }
 
   const { data, error } = await supabase.from("card_content").select("*")
@@ -33,12 +39,24 @@ export async function GET() {
 }
 
 export async function PUT(request: Request) {
-  const supabase = serverClient()
-  if (!supabase) {
+  if (!isSupabaseConfigured()) {
     return NextResponse.json(
-      { error: "Supabase is not configured. Set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY." },
+      {
+        error:
+          "Supabase is not configured. Set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY.",
+      },
       { status: 503 },
     )
+  }
+
+  const supabase = await createServerSupabase()
+  if (!supabase) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+  }
+
+  const { data: claimsData } = await supabase.auth.getClaims()
+  if (!claimsData?.claims) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
   }
 
   const body = (await request.json()) as CardRecord

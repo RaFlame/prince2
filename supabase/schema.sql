@@ -1,5 +1,6 @@
 -- Run in Supabase SQL Editor (Dashboard → SQL)
 -- Then set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY in .env.local
+-- and the same values in Vercel → Project → Settings → Environment Variables.
 
 create table if not exists public.card_content (
   card_key text primary key,
@@ -15,11 +16,21 @@ create table if not exists public.card_content (
 
 alter table public.card_content enable row level security;
 
+-- Remove open anon policy if it still exists
 drop policy if exists "Allow anon read write cards" on public.card_content;
-create policy "Allow anon read write cards"
+drop policy if exists "Authenticated read cards" on public.card_content;
+drop policy if exists "Authenticated write cards" on public.card_content;
+
+-- Only signed-in users can read/write cards
+create policy "Authenticated read cards"
+  on public.card_content
+  for select
+  to authenticated
+  using (true);
+
+create policy "Authenticated write cards"
   on public.card_content
   for all
+  to authenticated
   using (true)
   with check (true);
-
--- Optional: tighten later with auth.uid() policies for production.

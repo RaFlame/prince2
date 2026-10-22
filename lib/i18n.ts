@@ -185,8 +185,8 @@ const ui = {
   settings: {
     title: { is: "Stillingar", en: "Settings" },
     subtitle: {
-      is: "Viðmótstungumál fyrir þetta stjórnunaryfirlit.",
-      en: "Interface language for this governance dashboard.",
+      is: "Viðmótstungumál og aðgangur að stjórnunaryfirlitinu.",
+      en: "Interface language and access to this governance dashboard.",
     },
     language: { is: "Tungumál", en: "Language" },
     languageHint: {
@@ -195,6 +195,13 @@ const ui = {
     },
     icelandic: { is: "Íslenska", en: "Icelandic" },
     english: { is: "Enska", en: "English" },
+    account: { is: "Aðgangur", en: "Account" },
+    accountHint: {
+      is: "Þú ert skráð(ur) inn. Aðgangur er veittur af verkefnisstjóra (engin opin skráning).",
+      en: "You are signed in. Access is granted by the project owner (no public sign-up).",
+    },
+    signedInAs: { is: "Skráð(ur) inn sem", en: "Signed in as" },
+    signOut: { is: "Skrá út", en: "Sign out" },
   },
   theme: {
     toDark: { is: "Skipta í dökkt þema", en: "Switch to dark theme" },
