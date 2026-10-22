@@ -6,6 +6,11 @@ import { useProject } from "@/lib/project-context"
 import { pick } from "@/lib/project-types"
 import { EditableCard } from "@/components/editable-card"
 import { useStageStatuses } from "@/lib/stage-status-context"
+import { useStageSchedules } from "@/lib/stage-schedule-context"
+import {
+  formatScheduleDate,
+  scheduleProgressPercent,
+} from "@/lib/stage-schedule"
 import {
   stageCardClass,
   stageStatusBadgeClass,
@@ -60,10 +65,12 @@ export function ScrumStagesView({
   filterStatus: Exclude<StageStatus, "notStarted">
 }) {
   const { stageIdsByStatus, getStatus } = useStageStatuses()
+  const { getSchedule } = useStageSchedules()
   const { project } = useProject()
   const active = project.stages.filter((stage) =>
     stageIdsByStatus(filterStatus).includes(stage.id),
   )
+  const dateLocale = locale === "is" ? "is-IS" : "en-GB"
   const tone = pageTone[filterStatus]
   const copy = pageCopy[filterStatus]
 
@@ -86,6 +93,14 @@ export function ScrumStagesView({
         <div className="space-y-4">
           {active.map((stage) => {
             const status = getStatus(stage.id)
+            const schedule = getSchedule(stage.id)
+            const progress = scheduleProgressPercent(
+              schedule.startDate,
+              schedule.endDate,
+            )
+            const endLabel =
+              formatScheduleDate(schedule.endDate, dateLocale) ??
+              pick(locale, stage.endDate)
             return (
               <article
                 key={stage.id}
@@ -122,11 +137,10 @@ export function ScrumStagesView({
                       {t(locale, `status.${status}`)}
                     </span>
                     <span className="neo-meta-badge">
-                      {t(locale, "stages.progress")}: {stage.progress}%
+                      {t(locale, "stages.progress")}: {progress}%
                     </span>
                     <span className="neo-meta-badge">
-                      {t(locale, "stages.endDate")}:{" "}
-                      {pick(locale, stage.endDate)}
+                      {t(locale, "stages.estimatedEndDate")}: {endLabel}
                     </span>
                   </div>
                 </div>

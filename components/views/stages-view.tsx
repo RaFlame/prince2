@@ -7,11 +7,21 @@ import { pick } from "@/lib/project-types"
 import { EditableCard } from "@/components/editable-card"
 import { StageStatusSelect } from "@/components/stage-status-select"
 import { useStageStatuses } from "@/lib/stage-status-context"
+import { useStageSchedules } from "@/lib/stage-schedule-context"
+import {
+  formatScheduleDate,
+  scheduleProgressPercent,
+} from "@/lib/stage-schedule"
 import { stageCardClass } from "@/lib/stage-status"
 import { cn } from "@/lib/utils"
 
+function localeTag(locale: Locale) {
+  return locale === "is" ? "is-IS" : "en-GB"
+}
+
 export function StagesView({ locale }: { locale: Locale }) {
   const { getStatus, setStatus } = useStageStatuses()
+  const { getSchedule, setStartDate, setEndDate } = useStageSchedules()
   const { project } = useProject()
 
   return (
@@ -28,6 +38,15 @@ export function StagesView({ locale }: { locale: Locale }) {
       <div className="space-y-4">
         {project.stages.map((stage) => {
           const status = getStatus(stage.id)
+          const schedule = getSchedule(stage.id)
+          const progress = scheduleProgressPercent(
+            schedule.startDate,
+            schedule.endDate,
+          )
+          const endLabel =
+            formatScheduleDate(schedule.endDate, localeTag(locale)) ??
+            pick(locale, stage.endDate)
+
           return (
             <article
               key={stage.id}
@@ -55,11 +74,36 @@ export function StagesView({ locale }: { locale: Locale }) {
                     value={status}
                     onChange={(next) => setStatus(stage.id, next)}
                   />
+                  <label className="neo-meta-badge gap-1.5">
+                    <span>{t(locale, "stages.startDate")}</span>
+                    <input
+                      type="date"
+                      className="neo-field px-1.5 py-0.5 text-[11px] text-[var(--ink)]"
+                      value={schedule.startDate ?? ""}
+                      onChange={(event) =>
+                        setStartDate(stage.id, event.target.value || null)
+                      }
+                      aria-label={t(locale, "stages.startDate")}
+                    />
+                  </label>
+                  <label className="neo-meta-badge gap-1.5">
+                    <span>{t(locale, "stages.endDate")}</span>
+                    <input
+                      type="date"
+                      className="neo-field px-1.5 py-0.5 text-[11px] text-[var(--ink)]"
+                      value={schedule.endDate ?? ""}
+                      min={schedule.startDate ?? undefined}
+                      onChange={(event) =>
+                        setEndDate(stage.id, event.target.value || null)
+                      }
+                      aria-label={t(locale, "stages.endDate")}
+                    />
+                  </label>
                   <span className="neo-meta-badge">
-                    {t(locale, "stages.progress")}: {stage.progress}%
+                    {t(locale, "stages.progress")}: {progress}%
                   </span>
                   <span className="neo-meta-badge">
-                    {t(locale, "stages.endDate")}: {pick(locale, stage.endDate)}
+                    {t(locale, "stages.estimatedEndDate")}: {endLabel}
                   </span>
                 </div>
               </div>

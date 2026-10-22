@@ -13,6 +13,7 @@ import {
   PanelLeftOpen,
   Settings2,
   ShieldAlert,
+  Ship,
   Sun,
   Users,
 } from "lucide-react"
@@ -41,12 +42,14 @@ import { ScrumView } from "@/components/views/scrum-view"
 import { SettingsView } from "@/components/views/settings-view"
 import { StagesView } from "@/components/views/stages-view"
 import { TeamView } from "@/components/views/team-view"
+import { TherneyView } from "@/components/views/therney-view"
 import { WikiView } from "@/components/views/wiki-view"
 import { CardsProvider } from "@/lib/cards-context"
 import {
   StageStatusProvider,
   useStageStatuses,
 } from "@/lib/stage-status-context"
+import { StageScheduleProvider } from "@/lib/stage-schedule-context"
 import type { StageStatus } from "@/lib/stage-status"
 
 type NavItem = {
@@ -55,13 +58,15 @@ type NavItem = {
   tone?: string
 }
 
-const prince2Nav: NavItem[] = [
+const prince2NavBase: NavItem[] = [
   { id: "overview", icon: LayoutDashboard },
   { id: "stages", icon: ClipboardList },
   { id: "risks", icon: ShieldAlert },
   { id: "documents", icon: FileText },
   { id: "wiki", icon: BookOpen },
 ]
+
+const therneyNav: NavItem = { id: "therney", icon: Ship }
 
 const scrumBoardNav: NavItem = { id: "scrum", icon: Kanban }
 
@@ -131,7 +136,9 @@ export function AppShell() {
     <ProjectProvider>
       <CardsProvider>
         <StageStatusProvider>
-          <AppShellInner />
+          <StageScheduleProvider>
+            <AppShellInner />
+          </StageScheduleProvider>
         </StageStatusProvider>
       </CardsProvider>
     </ProjectProvider>
@@ -162,9 +169,15 @@ function AppShellInner() {
     [visibleScrumStageNav],
   )
 
+  const prince2Nav = useMemo(() => {
+    if (project.id !== "fiskistofa") return prince2NavBase
+    const [overview, ...rest] = prince2NavBase
+    return [overview, therneyNav, ...rest]
+  }, [project.id])
+
   const allNav = useMemo(
     () => [...prince2Nav, ...scrumNavVisible, ...sharedNav],
-    [scrumNavVisible],
+    [prince2Nav, scrumNavVisible],
   )
 
   useEffect(() => {
@@ -185,7 +198,7 @@ function AppShellInner() {
 
   useEffect(() => {
     const stillVisible = allNav.some((item) => item.id === section)
-    if (!stillVisible) setSection("scrum")
+    if (!stillVisible) setSection("overview")
   }, [allNav, section])
 
   function handleLocaleChange(next: Locale) {
@@ -382,6 +395,7 @@ function AppShellInner() {
 
         <main className="mx-auto max-w-[1500px] p-4 sm:p-6">
           {section === "overview" && <OverviewView locale={locale} />}
+          {section === "therney" && <TherneyView locale={locale} />}
           {section === "stages" && <StagesView locale={locale} />}
           {section === "risks" && <RisksView locale={locale} />}
           {section === "documents" && <DocumentsView locale={locale} />}

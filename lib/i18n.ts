@@ -2,6 +2,7 @@ export type Locale = "is" | "en"
 
 export type Section =
   | "overview"
+  | "therney"
   | "stages"
   | "risks"
   | "documents"
@@ -28,6 +29,7 @@ const ui = {
   },
   nav: {
     overview: { is: "Yfirlit", en: "Overview" },
+    therney: { is: "Þerney", en: "Therney" },
     stages: { is: "Áætlanir áfanga", en: "Stage plans" },
     risks: { is: "Áhættuskrá", en: "Risk register" },
     documents: { is: "Skjöl og afurðir", en: "Documents" },
@@ -38,6 +40,41 @@ const ui = {
     scrumStagesDone: { is: "Áfangar Búið", en: "Stages Done" },
     team: { is: "Teymi og hlutverk", en: "Team & roles" },
     settings: { is: "Stillingar", en: "Settings" },
+  },
+  therney: {
+    title: { is: "Þerney", en: "Therney" },
+    subtitle: {
+      is: "Skipsupplýsingar fyrir tilraunaskipið í learning phase.",
+      en: "Vessel particulars for the learning-phase trial vessel.",
+    },
+    general: { is: "Almennt", en: "General" },
+    photos: { is: "Myndir", en: "Photos" },
+    photoExterior: {
+      is: "Útlit skips — Þerney",
+      en: "Vessel exterior — Therney",
+    },
+    photoProcessing: {
+      is: "Vinnsludekk um borð",
+      en: "Onboard processing deck",
+    },
+    currentVoyage: { is: "Núverandi ferð", en: "Current voyage" },
+    departure: { is: "Brottför frá", en: "Departure from" },
+    arrival: { is: "Komustaður", en: "Arrival at" },
+    actualDeparture: {
+      is: "Rauntími brottfarar",
+      en: "Actual time of departure",
+    },
+    reportedEta: { is: "Tilkynnt ETA", en: "Reported ETA" },
+    pastTrack: { is: "Fyrri ferill", en: "Past track" },
+    routeForecast: { is: "Áætluð leið", en: "Route forecast" },
+    name: { is: "Nafn", en: "Name" },
+    flag: { is: "Fáni", en: "Flag" },
+    imo: { is: "IMO", en: "IMO" },
+    mmsi: { is: "MMSI", en: "MMSI" },
+    callSign: { is: "Kallmerki", en: "Call sign" },
+    aisClass: { is: "AIS-flokkur", en: "AIS transponder class" },
+    generalType: { is: "Almenn skipstegund", en: "General vessel type" },
+    detailedType: { is: "Nánari skipstegund", en: "Detailed vessel type" },
   },
   scrum: {
     title: { is: "SCRUM — sprettaborð", en: "SCRUM — sprint board" },
@@ -141,7 +178,12 @@ const ui = {
     },
     manager: { is: "Ábyrgð", en: "Owner" },
     progress: { is: "Framvinda", en: "Progress" },
+    startDate: { is: "Upphafsdagur", en: "Start date" },
     endDate: { is: "Lokadagur", en: "End date" },
+    estimatedEndDate: {
+      is: "Áætlaður lokadagur",
+      en: "Estimated end date",
+    },
     status: { is: "Staða", en: "Status" },
     gate: { is: "Go / no-go", en: "Go / no-go" },
     outcomes: { is: "Áætlaðar afurðir áfangans", en: "Planned stage outcomes" },
