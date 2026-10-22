@@ -1,12 +1,8 @@
 import type { Project } from "@/lib/project-types"
-import { eldarPowerProject } from "@/lib/projects/eldar-power"
 import { fiskistofaProject } from "@/lib/projects/fiskistofa"
 import { createBlankProject } from "@/lib/projects/scaffold"
 
-export const BUILTIN_PROJECTS: Project[] = [
-  fiskistofaProject,
-  eldarPowerProject,
-]
+export const BUILTIN_PROJECTS: Project[] = [fiskistofaProject]
 
 export const DEFAULT_PROJECT_ID = fiskistofaProject.id
 
