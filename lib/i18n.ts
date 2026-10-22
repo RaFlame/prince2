@@ -6,6 +6,10 @@ export type Section =
   | "risks"
   | "documents"
   | "wiki"
+  | "scrum"
+  | "scrumStages"
+  | "scrumStagesStopped"
+  | "scrumStagesDone"
   | "team"
   | "settings"
 
@@ -17,14 +21,66 @@ const ui = {
   lastUpdated: { is: "Síðast uppfært", en: "Last updated" },
   onTrack: { is: "Á áætlun", en: "On track" },
   atRisk: { is: "Í hættu", en: "At risk" },
+  workspaces: {
+    prince2: { is: "Vinnusvæði 1 · PRINCE2", en: "Workspace 1 · PRINCE2" },
+    scrum: { is: "Vinnusvæði 2 · SCRUM", en: "Workspace 2 · SCRUM" },
+    shared: { is: "Sameiginlegt", en: "Shared" },
+  },
   nav: {
     overview: { is: "Yfirlit", en: "Overview" },
     stages: { is: "Áætlanir áfanga", en: "Stage plans" },
     risks: { is: "Áhættuskrá", en: "Risk register" },
     documents: { is: "Skjöl og afurðir", en: "Documents" },
     wiki: { is: "Wiki", en: "Wiki" },
+    scrum: { is: "SCRUM", en: "SCRUM" },
+    scrumStages: { is: "Áfangar í vinnslu", en: "Stages in progress" },
+    scrumStagesStopped: { is: "Áfangar Stoppað", en: "Stages Stopped" },
+    scrumStagesDone: { is: "Áfangar Búið", en: "Stages Done" },
     team: { is: "Teymi og hlutverk", en: "Team & roles" },
     settings: { is: "Stillingar", en: "Settings" },
+  },
+  scrum: {
+    title: { is: "SCRUM — sprettaborð", en: "SCRUM — sprint board" },
+    subtitle: {
+      is: "Vinnusvæði 2: sprettir fyrir learning phase, samhliða PRINCE2 stjórnun.",
+      en: "Workspace 2: sprints for the learning phase, alongside PRINCE2 governance.",
+    },
+    stagesTitle: {
+      is: "Áfangar í vinnslu",
+      en: "Stages in progress",
+    },
+    stagesSubtitle: {
+      is: "Afrit af PRINCE2 áföngum sem merktir eru „Í vinnslu“ — uppfærist sjálfkrafa.",
+      en: "Copies of PRINCE2 stages marked “In progress” — updated automatically.",
+    },
+    stagesEmpty: {
+      is: "Enginn áfangi í vinnslu. Veldu „Í vinnslu“ undir Áætlanir áfanga.",
+      en: "No stage in progress. Choose “In progress” under Stage plans.",
+    },
+    stoppedTitle: {
+      is: "Áfangar Stoppað",
+      en: "Stages Stopped",
+    },
+    stoppedSubtitle: {
+      is: "Afrit af PRINCE2 áföngum sem merktir eru „Stoppað“.",
+      en: "Copies of PRINCE2 stages marked “Stopped”.",
+    },
+    stoppedEmpty: {
+      is: "Enginn áfangi stoppaður. Veldu „Stoppað“ undir Áætlanir áfanga.",
+      en: "No stopped stages. Choose “Stopped” under Stage plans.",
+    },
+    doneTitle: {
+      is: "Áfangar Búið",
+      en: "Stages Done",
+    },
+    doneSubtitle: {
+      is: "Afrit af PRINCE2 áföngum sem merktir eru „Búið“.",
+      en: "Copies of PRINCE2 stages marked “Done”.",
+    },
+    doneEmpty: {
+      is: "Enginn áfangi búinn. Veldu „Búið“ undir Áætlanir áfanga.",
+      en: "No completed stages. Choose “Done” under Stage plans.",
+    },
   },
   wiki: {
     title: { is: "Wiki", en: "Wiki" },
@@ -123,9 +179,15 @@ const ui = {
     icelandic: { is: "Íslenska", en: "Icelandic" },
     english: { is: "Enska", en: "English" },
   },
+  theme: {
+    toDark: { is: "Skipta í dökkt þema", en: "Switch to dark theme" },
+    toLight: { is: "Skipta í ljóst þema", en: "Switch to light theme" },
+  },
   status: {
     notStarted: { is: "Ekki hafið", en: "Not started" },
     inProgress: { is: "Í vinnslu", en: "In progress" },
+    stopped: { is: "Stoppað", en: "Stopped" },
+    done: { is: "Búið", en: "Done" },
     complete: { is: "Lokið", en: "Complete" },
     planned: { is: "Áætlað", en: "Planned" },
     draft: { is: "Drög", en: "Draft" },
@@ -153,7 +215,7 @@ const ui = {
     color: { is: "Litur", en: "Color" },
     bold: { is: "Feitletrað", en: "Bold" },
     italic: { is: "Skáletrað", en: "Italic" },
-    savedCloud: { is: "Vistað í Supabase", en: "Saved to Supabase" },
+    savedCloud: { is: "Vistað", en: "Saved" },
     savedLocal: {
       is: "Vistað á þessari tölvu (settu upp Supabase fyrir ský)",
       en: "Saved on this device (configure Supabase for cloud)",

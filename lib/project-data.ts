@@ -1,5 +1,8 @@
 import type { Locale } from "./i18n"
 import { loc } from "./i18n"
+import type { StageStatus } from "@/lib/stage-status"
+
+export type { StageStatus }
 
 type L = { is: string; en: string }
 
@@ -126,8 +129,6 @@ export const tolerances: {
     tone: "watch",
   },
 ]
-
-export type StageStatus = "notStarted" | "inProgress" | "complete"
 
 export const stages: {
   id: string

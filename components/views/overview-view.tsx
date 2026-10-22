@@ -1,3 +1,5 @@
+"use client"
+
 import type { Locale } from "@/lib/i18n"
 import { t } from "@/lib/i18n"
 import {
@@ -13,8 +15,12 @@ import {
   tolerances,
 } from "@/lib/project-data"
 import { EditableCard } from "@/components/editable-card"
+import { useStageStatuses } from "@/lib/stage-status-context"
+import { stageStatusBadgeClass } from "@/lib/stage-status"
+import { cn } from "@/lib/utils"
 
 export function OverviewView({ locale }: { locale: Locale }) {
+  const { getStatus } = useStageStatuses()
   return (
     <div className="space-y-6">
       <div>
@@ -139,8 +145,13 @@ export function OverviewView({ locale }: { locale: Locale }) {
                   <td className="px-5 py-3">{stage.progress}%</td>
                   <td className="px-5 py-3">{pick(locale, stage.endDate)}</td>
                   <td className="px-5 py-3">
-                    <span className="rounded-full bg-slate-100 px-2 py-1 text-[11px]">
-                      {t(locale, `status.${stage.status}`)}
+                    <span
+                      className={cn(
+                        "rounded-full px-2 py-1 text-[11px] font-medium",
+                        stageStatusBadgeClass[getStatus(stage.id)],
+                      )}
+                    >
+                      {t(locale, `status.${getStatus(stage.id)}`)}
                     </span>
                   </td>
                 </tr>

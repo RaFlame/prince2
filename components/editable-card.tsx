@@ -1,7 +1,7 @@
 "use client"
 
-import { useEffect, useState } from "react"
-import { Bold, Check, Italic, Loader2, Pencil, X } from "lucide-react"
+import { useEffect, useRef, useState } from "react"
+import { Bold, Check, Italic, Loader2, X } from "lucide-react"
 import type { Locale } from "@/lib/i18n"
 import { t } from "@/lib/i18n"
 import { useCards } from "@/lib/cards-context"
@@ -40,6 +40,7 @@ export function EditableCard({
 }: Props) {
   const { getCard, saveCard, configured, ready } = useCards()
   const stored = getCard(cardKey, { is: defaultIs, en: defaultEn })
+  const textareaRef = useRef<HTMLTextAreaElement>(null)
 
   const [editing, setEditing] = useState(false)
   const [draft, setDraft] = useState<CardRecord>(stored)
@@ -48,11 +49,34 @@ export function EditableCard({
 
   useEffect(() => {
     if (!editing) setDraft(getCard(cardKey, { is: defaultIs, en: defaultEn }))
-  }, [cardKey, defaultIs, defaultEn, getCard, editing, stored.content_is, stored.content_en, stored.font, stored.size, stored.color, stored.bold, stored.italic])
+  }, [
+    cardKey,
+    defaultIs,
+    defaultEn,
+    getCard,
+    editing,
+    stored.content_is,
+    stored.content_en,
+    stored.font,
+    stored.size,
+    stored.color,
+    stored.bold,
+    stored.italic,
+  ])
+
+  useEffect(() => {
+    if (!editing) return
+    const el = textareaRef.current
+    if (!el) return
+    el.focus()
+    const len = el.value.length
+    el.setSelectionRange(len, len)
+  }, [editing])
 
   const body = locale === "is" ? draft.content_is : draft.content_en
 
   function startEdit() {
+    if (!ready || editing) return
     setDraft(getCard(cardKey, { is: defaultIs, en: defaultEn }))
     setEditing(true)
     setMessage(null)
@@ -96,33 +120,42 @@ export function EditableCard({
   return (
     <section
       className={cn(
-        "rounded border border-slate-200 bg-white p-5",
-        className,
+        "p-5 transition-[box-shadow,background,border-color] duration-150",
+        editing
+          ? "neo-recessed cursor-default"
+          : cn(
+              "cursor-pointer rounded border border-slate-200 bg-white hover:border-slate-300",
+              className,
+            ),
       )}
+      onClick={startEdit}
+      onKeyDown={(e) => {
+        if (editing) return
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault()
+          startEdit()
+        }
+      }}
+      role={editing ? undefined : "button"}
+      tabIndex={editing || !ready ? undefined : 0}
+      aria-label={editing ? undefined : `${t(locale, "cards.edit")}: ${title}`}
     >
       <div className="flex items-start justify-between gap-3">
         <h2 className="text-sm font-semibold text-slate-900">{title}</h2>
-        <div className="flex shrink-0 items-center gap-1">
+        <div
+          className="flex shrink-0 items-center gap-1"
+          onClick={(e) => e.stopPropagation()}
+        >
           {message && (
             <span className="mr-1 text-[10px] text-emerald-700">{message}</span>
           )}
-          {!editing ? (
-            <button
-              type="button"
-              onClick={startEdit}
-              disabled={!ready}
-              className="rounded border border-slate-200 p-1.5 text-slate-500 hover:bg-slate-50 hover:text-slate-800"
-              title={t(locale, "cards.edit")}
-            >
-              <Pencil size={14} />
-            </button>
-          ) : (
+          {editing && (
             <>
               <button
                 type="button"
                 onClick={() => void save()}
                 disabled={saving}
-                className="rounded border border-blue-200 bg-blue-50 p-1.5 text-blue-800 hover:bg-blue-100 disabled:opacity-50"
+                className="neo-icon-btn-save p-1.5 disabled:opacity-50"
                 title={t(locale, "cards.save")}
               >
                 {saving ? (
@@ -135,7 +168,7 @@ export function EditableCard({
                 type="button"
                 onClick={cancel}
                 disabled={saving}
-                className="rounded border border-slate-200 p-1.5 text-slate-500 hover:bg-slate-50"
+                className="neo-icon-btn p-1.5 disabled:opacity-50"
                 title={t(locale, "cards.cancel")}
               >
                 <X size={14} />
@@ -146,11 +179,14 @@ export function EditableCard({
       </div>
 
       {editing && (
-        <div className="mt-3 flex flex-wrap items-center gap-2 rounded border border-slate-100 bg-slate-50 p-2">
+        <div
+          className="neo-recessed-sm mt-3 flex flex-wrap items-center gap-2 p-2"
+          onClick={(e) => e.stopPropagation()}
+        >
           <label className="flex items-center gap-1 text-[10px] text-slate-500">
             {t(locale, "cards.font")}
             <select
-              className="rounded border border-slate-200 bg-white px-1.5 py-1 text-xs text-slate-800"
+              className="neo-select px-1.5 py-1 text-xs text-slate-800"
               value={draft.font}
               onChange={(e) =>
                 setDraft((d) => ({
@@ -170,7 +206,7 @@ export function EditableCard({
           <label className="flex items-center gap-1 text-[10px] text-slate-500">
             {t(locale, "cards.size")}
             <select
-              className="rounded border border-slate-200 bg-white px-1.5 py-1 text-xs text-slate-800"
+              className="neo-select px-1.5 py-1 text-xs text-slate-800"
               value={draft.size}
               onChange={(e) =>
                 setDraft((d) => ({
@@ -190,7 +226,7 @@ export function EditableCard({
           <label className="flex items-center gap-1 text-[10px] text-slate-500">
             {t(locale, "cards.color")}
             <select
-              className="rounded border border-slate-200 bg-white px-1.5 py-1 text-xs text-slate-800"
+              className="neo-select px-1.5 py-1 text-xs text-slate-800"
               value={draft.color}
               onChange={(e) =>
                 setDraft((d) => ({
@@ -211,11 +247,10 @@ export function EditableCard({
             type="button"
             onClick={() => setDraft((d) => ({ ...d, bold: !d.bold }))}
             className={cn(
-              "rounded border p-1.5",
-              draft.bold
-                ? "border-slate-800 bg-slate-800 text-white"
-                : "border-slate-200 bg-white text-slate-600",
+              "p-1.5",
+              draft.bold ? "neo-pressed" : "neo-icon-btn",
             )}
+            aria-pressed={draft.bold}
             title={t(locale, "cards.bold")}
           >
             <Bold size={14} />
@@ -224,11 +259,10 @@ export function EditableCard({
             type="button"
             onClick={() => setDraft((d) => ({ ...d, italic: !d.italic }))}
             className={cn(
-              "rounded border p-1.5",
-              draft.italic
-                ? "border-slate-800 bg-slate-800 text-white"
-                : "border-slate-200 bg-white text-slate-600",
+              "p-1.5",
+              draft.italic ? "neo-pressed" : "neo-icon-btn",
             )}
+            aria-pressed={draft.italic}
             title={t(locale, "cards.italic")}
           >
             <Italic size={14} />
@@ -242,12 +276,14 @@ export function EditableCard({
 
       {editing ? (
         <textarea
+          ref={textareaRef}
           className={cn(
-            "mt-3 min-h-28 w-full resize-y rounded border border-slate-200 bg-white p-3 outline-none focus:border-blue-400",
+            "neo-field mt-3 min-h-28 w-full resize-y p-3",
             textClass,
           )}
           style={{ fontFamily: fontCss(draft.font) }}
           value={body}
+          onClick={(e) => e.stopPropagation()}
           onChange={(e) =>
             setDraft((d) =>
               locale === "is"

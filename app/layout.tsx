@@ -1,4 +1,5 @@
 import type { Metadata } from "next"
+import Script from "next/script"
 import {
   DM_Sans,
   Fraunces,
@@ -39,10 +40,13 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="is">
+    <html lang="is" suppressHydrationWarning>
       <body
         className={`${fontSans.variable} ${fontSerif.variable} ${fontDisplay.variable} ${fontMono.variable} ${fontRounded.variable} antialiased`}
       >
+        <Script id="prince2-theme-init" strategy="beforeInteractive">
+          {`(function(){try{var t=localStorage.getItem("prince2-theme");if(t==="dark"){document.documentElement.classList.add("dark");document.documentElement.dataset.theme="dark";document.documentElement.style.colorScheme="dark"}}catch(e){}})();`}
+        </Script>
         {children}
       </body>
     </html>

@@ -25,6 +25,16 @@ export function WikiView({ locale }: { locale: Locale }) {
         <p className="mt-2 text-[11px] font-semibold uppercase tracking-wide text-slate-400">
           {t(locale, "wiki.abbreviations")}
         </p>
+        <div className="mt-3 flex flex-wrap gap-1.5">
+          {glossaryTerms.map((term) => (
+            <span
+              key={term.abbr}
+              className="rounded border border-slate-200 bg-slate-50 px-2 py-0.5 font-mono text-[11px] font-medium text-slate-700"
+            >
+              {term.abbr}
+            </span>
+          ))}
+        </div>
       </section>
 
       <div className="grid gap-4 lg:grid-cols-2">

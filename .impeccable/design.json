@@ -1,0 +1,321 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-22T00:04:00.000Z",
+  "title": "Design System: PRINCE2 Control",
+  "extensions": {
+    "colorMeta": {
+      "north-atlantic-ink": {
+        "role": "primary",
+        "displayName": "North Atlantic Ink",
+        "canonical": "#1d4ed8",
+        "tonalRamp": [
+          "#0a1f66",
+          "#12308a",
+          "#1d4ed8",
+          "#3b6ef0",
+          "#6b93f7",
+          "#9db8fb",
+          "#c9d8fd",
+          "#eff6ff"
+        ]
+      },
+      "north-atlantic-ink-soft": {
+        "role": "primary",
+        "displayName": "North Atlantic Ink Soft",
+        "canonical": "#eff6ff",
+        "tonalRamp": [
+          "#1d4ed8",
+          "#3b6ef0",
+          "#6b93f7",
+          "#9db8fb",
+          "#c9d8fd",
+          "#dbeafe",
+          "#eff6ff",
+          "#f8fbff"
+        ]
+      },
+      "operational-seafoam": {
+        "role": "secondary",
+        "displayName": "Operational Seafoam",
+        "canonical": "#047857",
+        "tonalRamp": [
+          "#022c22",
+          "#064e3b",
+          "#047857",
+          "#059669",
+          "#34d399",
+          "#6ee7b7",
+          "#a7f3d0",
+          "#ecfdf5"
+        ]
+      },
+      "operational-seafoam-soft": {
+        "role": "secondary",
+        "displayName": "Operational Seafoam Soft",
+        "canonical": "#ecfdf5",
+        "tonalRamp": [
+          "#047857",
+          "#059669",
+          "#34d399",
+          "#6ee7b7",
+          "#a7f3d0",
+          "#d1fae5",
+          "#ecfdf5",
+          "#f7fefb"
+        ]
+      },
+      "mist-deck": {
+        "role": "neutral",
+        "displayName": "Mist Deck",
+        "canonical": "#f1f5f9",
+        "tonalRamp": [
+          "#020617",
+          "#334155",
+          "#64748b",
+          "#94a3b8",
+          "#cbd5e1",
+          "#e2e8f0",
+          "#f1f5f9",
+          "#f8fafc"
+        ]
+      },
+      "panel-white": {
+        "role": "neutral",
+        "displayName": "Panel White",
+        "canonical": "#ffffff",
+        "tonalRamp": [
+          "#94a3b8",
+          "#cbd5e1",
+          "#e2e8f0",
+          "#f1f5f9",
+          "#f8fafc",
+          "#fcfcfd",
+          "#ffffff",
+          "#ffffff"
+        ]
+      },
+      "hairline": {
+        "role": "neutral",
+        "displayName": "Hairline",
+        "canonical": "#e2e8f0",
+        "tonalRamp": [
+          "#64748b",
+          "#94a3b8",
+          "#cbd5e1",
+          "#e2e8f0",
+          "#f1f5f9",
+          "#f8fafc",
+          "#fcfcfd",
+          "#ffffff"
+        ]
+      },
+      "mute-slate": {
+        "role": "neutral",
+        "displayName": "Mute Slate",
+        "canonical": "#64748b",
+        "tonalRamp": [
+          "#020617",
+          "#1e293b",
+          "#334155",
+          "#475569",
+          "#64748b",
+          "#94a3b8",
+          "#cbd5e1",
+          "#f1f5f9"
+        ]
+      },
+      "body-slate": {
+        "role": "neutral",
+        "displayName": "Body Slate",
+        "canonical": "#475569",
+        "tonalRamp": [
+          "#020617",
+          "#0f172a",
+          "#1e293b",
+          "#334155",
+          "#475569",
+          "#64748b",
+          "#94a3b8",
+          "#e2e8f0"
+        ]
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Ink",
+        "canonical": "#020617",
+        "tonalRamp": [
+          "#020617",
+          "#0f172a",
+          "#1e293b",
+          "#334155",
+          "#475569",
+          "#64748b",
+          "#94a3b8",
+          "#e2e8f0"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "Section page titles (h1)."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Card and section headings."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Emphasized table and panel titles."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Nav labels and card body copy."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Meta chrome, breadcrumbs, tracked eyebrows."
+      }
+    },
+    "shadows": [
+      {
+        "name": "raised-control",
+        "value": "5px 5px 10px #c8d0da, -5px -5px 10px #ffffff",
+        "purpose": "Extruded controls on Mist Deck."
+      },
+      {
+        "name": "raised-control-pressed",
+        "value": "inset 3px 3px 6px #c8d0da, inset -3px -3px 6px #ffffff",
+        "purpose": "Pressed or selected raised controls."
+      },
+      {
+        "name": "recessed-panel",
+        "value": "inset 6px 6px 12px #c8d0da, inset -6px -6px 12px #ffffff",
+        "purpose": "Content wells: cards, stage blocks, wiki panels."
+      }
+    ],
+    "motion": [
+      {
+        "name": "ease-standard",
+        "value": "cubic-bezier(0.4, 0, 0.2, 1)",
+        "purpose": "Default state transitions (nav, buttons)."
+      }
+    ],
+    "breakpoints": [
+      { "name": "sm", "value": "640px" },
+      { "name": "lg", "value": "1024px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Raised North Atlantic Ink action for primary commits.",
+      "html": "<button class=\"ds-btn-primary\" type=\"button\">Vista</button>",
+      "css": ".ds-btn-primary { background: #1d4ed8; color: #fff; padding: 8px 16px; font: 500 0.875rem Arial, Helvetica, sans-serif; border: none; border-radius: 4px; box-shadow: 5px 5px 10px #c8d0da, -5px -5px 10px #ffffff; transition: background 0.15s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.15s; } .ds-btn-primary:hover { background: #1e40af; } .ds-btn-primary:active { box-shadow: inset 3px 3px 6px #163a9e, inset -2px -2px 4px #3b6ef0; } .ds-btn-primary:focus-visible { outline: 2px solid #1d4ed8; outline-offset: 2px; }"
+    },
+    {
+      "name": "Secondary Button",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Raised secondary control on Mist Deck.",
+      "html": "<button class=\"ds-btn-secondary\" type=\"button\">Hætta við</button>",
+      "css": ".ds-btn-secondary { background: #f1f5f9; color: #475569; padding: 8px 16px; font: 500 0.875rem Arial, Helvetica, sans-serif; border: none; border-radius: 4px; box-shadow: 5px 5px 10px #c8d0da, -5px -5px 10px #ffffff; } .ds-btn-secondary:hover { color: #020617; } .ds-btn-secondary:active { box-shadow: inset 3px 3px 6px #c8d0da, inset -3px -3px 6px #ffffff; } .ds-btn-secondary:focus-visible { outline: 2px solid #1d4ed8; outline-offset: 2px; }"
+    },
+    {
+      "name": "Nav Item Active",
+      "kind": "nav",
+      "refersTo": "nav-item-active",
+      "description": "Sidebar section control in active state.",
+      "html": "<button class=\"ds-nav-active\" type=\"button\"><svg width=\"15\" height=\"15\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><rect x=\"3\" y=\"3\" width=\"7\" height=\"9\" rx=\"1\"/><rect x=\"14\" y=\"3\" width=\"7\" height=\"5\" rx=\"1\"/><rect x=\"14\" y=\"12\" width=\"7\" height=\"9\" rx=\"1\"/><rect x=\"3\" y=\"16\" width=\"7\" height=\"5\" rx=\"1\"/></svg> Yfirlit</button>",
+      "css": ".ds-nav-active { display: flex; align-items: center; gap: 8px; width: 100%; text-align: left; background: #eff6ff; color: #1d4ed8; font: 500 0.875rem Arial, Helvetica, sans-serif; padding: 8px 12px; border: none; border-radius: 4px; box-shadow: inset 3px 3px 6px #d5e4fb, inset -2px -2px 4px #ffffff; } .ds-nav-active:focus-visible { outline: 2px solid #1d4ed8; outline-offset: 2px; }"
+    },
+    {
+      "name": "Status Chip",
+      "kind": "chip",
+      "refersTo": "status-chip",
+      "description": "On-track / operational status pill.",
+      "html": "<span class=\"ds-chip-status\">Á áætlun</span>",
+      "css": ".ds-chip-status { display: inline-flex; align-items: center; background: #ecfdf5; color: #047857; font: 500 0.75rem Arial, Helvetica, sans-serif; padding: 4px 8px; border-radius: 9999px; }"
+    },
+    {
+      "name": "Recessed Card",
+      "kind": "card",
+      "refersTo": "card-surface",
+      "description": "Neomorphic content well for EditableCard and stage panels.",
+      "html": "<section class=\"ds-card\"><h2 class=\"ds-card-title\">Viðskiptaleg réttlæting</h2><p class=\"ds-card-body\">Óbeint framhald af tilraunaverkefni um rafrænt eftirlit…</p></section>",
+      "css": ".ds-card { background: #f1f5f9; color: #020617; border-radius: 4px; padding: 20px; box-shadow: inset 6px 6px 12px #c8d0da, inset -6px -6px 12px #ffffff; } .ds-card-title { margin: 0; font: 600 0.875rem Arial, Helvetica, sans-serif; color: #0f172a; } .ds-card-body { margin: 12px 0 0; font: 400 0.875rem/1.5 Arial, Helvetica, sans-serif; color: #475569; }"
+    },
+    {
+      "name": "Locale Toggle",
+      "kind": "custom",
+      "refersTo": "button-secondary",
+      "description": "IS/EN segmented raised control; active segment inset.",
+      "html": "<div class=\"ds-locale\" role=\"group\" aria-label=\"Language\"><button class=\"ds-locale-btn ds-locale-btn-active\" type=\"button\">IS</button><button class=\"ds-locale-btn\" type=\"button\">EN</button></div>",
+      "css": ".ds-locale { display: inline-flex; gap: 2px; padding: 2px; border-radius: 4px; background: #f1f5f9; box-shadow: inset 3px 3px 6px #c8d0da, inset -3px -3px 6px #ffffff; } .ds-locale-btn { border: none; background: transparent; color: #475569; font: 500 0.6875rem Arial, Helvetica, sans-serif; padding: 4px 8px; border-radius: 4px; } .ds-locale-btn-active { background: #020617; color: #fff; box-shadow: 3px 3px 6px #c8d0da, -2px -2px 4px #ffffff; } .ds-locale-btn:focus-visible { outline: 2px solid #1d4ed8; outline-offset: 1px; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Coastal Control Room",
+    "overview": "PRINCE2 Control reads as a dense Icelandic public-sector instrument panel for onboard camera monitoring — not a marketing site and not a playful SaaS kit. The Coastal Control Room metaphor means calm institutional oversight with a faint North-Atlantic edge: cool slate decks, a single harbour signal accent, and surfaces that feel machined rather than decorated.\n\nThe system is technical, compact, and table-first. Hierarchy favors scan paths for interview walkthroughs and ongoing status reading: page titles, tight section labels, and data-dense tables and cards. Whitespace is earned; density is the default.\n\nDepth uses neomorphism: recessed panels and raised controls on a shared mist-deck ground. Soft dual shadows (light + dark) create extrusion and inset; hard drop-shadows and generic card chrome are rejected.",
+    "keyCharacteristics": [
+      "Cool slate deck with one North Atlantic Ink accent",
+      "Compact type, table- and card-forward information density",
+      "Neomorphic recessed panels + raised controls",
+      "Bilingual chrome (IS/EN) treated as first-class UI, not an afterthought",
+      "Public-sector gravity — serious, scannable, never gimmicky"
+    ],
+    "rules": [
+      {
+        "name": "The One Signal Rule",
+        "body": "North Atlantic Ink occupies ≤10% of any viewport. If everything is accented, nothing is.",
+        "section": "colors"
+      },
+      {
+        "name": "The Deck Continuity Rule",
+        "body": "Neomorphic light/dark shadows must share the same Mist Deck ground color; never float white cards on white with unrelated gray shadows.",
+        "section": "colors"
+      },
+      {
+        "name": "The Shell Discipline Rule",
+        "body": "Shell chrome stays Arial/system. Do not promote Fraunces or display faces into nav, headers, or buttons.",
+        "section": "typography"
+      },
+      {
+        "name": "The Compact Scan Rule",
+        "body": "Prefer text-sm / text-xs over large marketing sizes. Tables and chips beat hero typography.",
+        "section": "typography"
+      },
+      {
+        "name": "The Table-First Rule",
+        "body": "When content is comparative (stages, risks, glossary), prefer tables or compact lists over large marketing cards.",
+        "section": "layout"
+      },
+      {
+        "name": "The Neo Ground Rule",
+        "body": "Always cast neo shadows against Mist Deck (#f1f5f9). Extruding from pure white breaks the illusion.",
+        "section": "elevation"
+      },
+      {
+        "name": "The Grid Exception Rule",
+        "body": "Data tables stay flat + hairline. Do not neomorph every cell.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do keep Mist Deck as the neo ground and share one light/dark shadow pair across the shell.",
+      "Do reserve North Atlantic Ink for navigation signal, primary actions, and focus.",
+      "Do prefer tables and compact grids for stages, risks, and glossary.",
+      "Do keep shell typography utilitarian; confine display/serif/mono choices to EditableCard content.",
+      "Do treat IS/EN as equal chrome in every durable string."
+    ],
+    "donts": [
+      "Don't use purple gradients, glow stacks, or playful SaaS marketing patterns.",
+      "Don't neomorph data-table cells or cover the UI in identical raised cards.",
+      "Don't promote Fraunces/Literata into nav, page titles, or buttons.",
+      "Don't invent Fiskistofa logo marks or official brand colors until assets are supplied.",
+      "Don't inflate type or whitespace into a landing-page hero — this is a control room."
+    ]
+  }
+}
