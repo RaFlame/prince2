@@ -372,7 +372,7 @@ export function ScrumView({ locale }: { locale: Locale }) {
                         </p>
                         {isStage ? (
                           <>
-                            <span className="rounded bg-slate-200/80 px-1.5 py-0.5 text-[9px] font-medium uppercase tracking-wide text-slate-600">
+                            <span className="neo-kind-chip neo-kind-stage">
                               {t(locale, "scrum.stageCard")}
                             </span>
                             <span
@@ -385,7 +385,7 @@ export function ScrumView({ locale }: { locale: Locale }) {
                             </span>
                           </>
                         ) : (
-                          <span className="rounded bg-slate-200/80 px-1.5 py-0.5 text-[9px] font-medium uppercase tracking-wide text-slate-600">
+                          <span className="neo-kind-chip neo-kind-task">
                             {t(locale, "scrum.taskCard")}
                           </span>
                         )}
