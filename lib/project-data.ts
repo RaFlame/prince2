@@ -170,6 +170,10 @@ export const stages: {
         is: "Endurskoðaður samstarfssamningur (eign, aðgangur, nám vs. eftirlit)",
         en: "Revised cooperation agreement (ownership, access, learning vs enforcement)",
       },
+      {
+        is: "Hagsmunaaðilaskrá (hlutverk, áhrif, samskipti)",
+        en: "Stakeholder register (roles, influence, engagement)",
+      },
     ],
   },
   {
@@ -463,6 +467,15 @@ export const documents: {
     type: { is: "Samningur", en: "Agreement" },
     stage: "P0",
     status: "draft",
+  },
+  {
+    name: {
+      is: "Hagsmunaaðilaskrá",
+      en: "Stakeholder register",
+    },
+    type: { is: "Stjórnunarskjal", en: "Management product" },
+    stage: "P0",
+    status: "planned",
   },
   {
     name: {
